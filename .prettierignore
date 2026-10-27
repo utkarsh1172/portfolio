@@ -1,0 +1,6 @@
+.next
+node_modules
+package-lock.json
+public
+src/data/land-dots.ts
+*.woff2
