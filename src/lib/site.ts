@@ -19,4 +19,4 @@ if (!parsed.success) {
 export const siteUrl = parsed.data.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
 
 export const siteDescription =
-  "Abhay Maske, Product Designer and UI/UX Designer. Simplifies complex operational workflows across CRM, logistics and SaaS, and builds scalable design systems. Case studies: RedFox Courier, Growve Design System, Walherb.";
+  "Utkarsh Kamble, full-stack engineer in Mumbai. Builds order automation CRMs, logistics platforms and e-commerce systems: Amazon SP-API, courier integrations, PostgreSQL, Next.js, Node.js and React Native.";

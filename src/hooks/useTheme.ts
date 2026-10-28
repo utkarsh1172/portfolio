@@ -2,21 +2,29 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import { THEME_STORAGE_KEY, type Theme } from "@/lib/theme";
+const darkQuery = () => window.matchMedia("(prefers-color-scheme: dark)");
 
 function subscribe(onChange: () => void) {
+  const mq = darkQuery();
   const mo = new MutationObserver(onChange);
   mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  return () => mo.disconnect();
+  mq.addEventListener("change", onChange);
+  return () => {
+    mo.disconnect();
+    mq.removeEventListener("change", onChange);
+  };
 }
 
 function getSnapshot(): Theme {
-  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  const explicit = document.documentElement.dataset.theme;
+  if (explicit === "light" || explicit === "dark") return explicit;
+  return darkQuery().matches ? "dark" : "light";
 }
 
 /**
- * The active colour theme. `null` during server render and hydration, so the
- * markup never mismatches; the inline script in the root layout applies the
- * saved choice (or dark) before paint.
+ * The resolved colour theme. `null` during server render and hydration, so the
+ * markup never mismatches; the saved choice is applied before paint by the
+ * inline script in the root layout.
  */
 export function useTheme() {
   const theme = useSyncExternalStore<Theme | null>(subscribe, getSnapshot, () => null);

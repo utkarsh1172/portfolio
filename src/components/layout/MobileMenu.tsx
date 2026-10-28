@@ -1,19 +1,19 @@
 "use client";
 
 import { X } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useRef, type CSSProperties } from "react";
+import { motion } from "motion/react";
+import { useEffect, useRef } from "react";
 import { navigation } from "@/data/navigation";
 import { cn } from "@/lib/cn";
 
 interface MobileMenuProps {
-  active: string;
+  activeIndex: number;
   onClose: () => void;
-  onNavigate: () => void;
+  onNavigate: (id: string) => (e: React.MouseEvent) => void;
 }
 
-/** Full-screen menu for small screens. Traps focus and closes on Escape; the header restores focus. */
-export function MobileMenu({ active, onClose, onNavigate }: MobileMenuProps) {
+/** Full-screen route menu for small screens. Traps focus and closes on Escape; the header restores focus. */
+export function MobileMenu({ activeIndex, onClose, onNavigate }: MobileMenuProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,48 +45,61 @@ export function MobileMenu({ active, onClose, onNavigate }: MobileMenuProps) {
   }, [onClose]);
 
   return (
-    <div
+    <motion.div
       ref={dialogRef}
-      id="mobile-menu"
+      id="mobile-route"
       role="dialog"
       aria-modal="true"
-      aria-label="Menu"
-      className="menu-panel fixed inset-0 z-70 fade-in pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] lg:hidden"
+      aria-label="Sections"
+      className="fixed inset-0 z-[70] bg-bg/95 pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl lg:hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
     >
-      <div className="flex h-[calc(3.5rem+0.75rem)] items-end justify-between px-5 pb-1">
-        <span className="eyebrow">Menu</span>
+      <div className="flex h-16 items-center justify-between px-5">
+        <span className="font-semi font-semibold text-muted">Jump to a stop</span>
         <button
           type="button"
-          className="grid h-11 w-11 place-items-center rounded-full hover:bg-ink/8"
-          aria-label="Close menu"
+          className="grid h-11 w-11 place-items-center rounded-full hover:bg-surface-2"
+          aria-label="Close sections menu"
           onClick={onClose}
           autoFocus
         >
-          <X size={20} aria-hidden />
+          <X size={18} aria-hidden />
         </button>
       </div>
-      <nav aria-label="Main" className="px-5 pt-6">
-        <ul className="divide-y divide-line border-y border-line">
-          {navigation.map((s, i) => (
-            <li key={s.id} className="hero-fade" style={{ "--d": `${0.025 * i}s` } as CSSProperties}>
-              <Link
-                href={`/#${s.id}`}
-                onClick={onNavigate}
-                aria-current={active === s.id ? "location" : undefined}
-                className={cn(
-                  "flex min-h-16 items-center justify-between text-[1.75rem] font-semibold tracking-tight",
-                  active === s.id ? "text-accent" : "text-ink",
-                )}
-              >
-                {s.label}
-                <span className="text-sm font-medium text-muted tabular-nums" aria-hidden>
-                  0{i + 1}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+      <ol className="relative mx-8 mt-4 border-l-2 border-dashed border-line pl-8">
+        {navigation.map((s, i) => (
+          <motion.li
+            key={s.id}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.03 * i }}
+            className="relative py-3"
+          >
+            <span
+              className={cn(
+                "absolute top-1/2 -left-[41px] h-4 w-4 -translate-y-1/2 rounded-full border-2",
+                i === activeIndex
+                  ? "border-accent bg-accent"
+                  : i < activeIndex
+                    ? "border-accent bg-bg"
+                    : "border-line bg-bg",
+              )}
+              aria-hidden
+            />
+            <a
+              href={`#${s.id}`}
+              onClick={onNavigate(s.id)}
+              className="display block text-[2.6rem] text-ink"
+              aria-current={i === activeIndex ? "location" : undefined}
+            >
+              {s.label}
+            </a>
+          </motion.li>
+        ))}
+      </ol>
+    </motion.div>
   );
 }

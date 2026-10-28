@@ -1,42 +1,75 @@
 import type { SkillGroup } from "@/types";
 
-/**
- * Only skills the resume states or the case studies show. Don't add a tool or
- * technique here until it is confirmed.
- */
+/** Skills grouped by where each tool sits in a commerce system. */
 export const skillGroups: readonly SkillGroup[] = [
   {
-    id: "product",
-    title: "Product and UX design",
+    id: "integrations",
+    title: "Marketplaces, carriers and payments",
+    blurb: "The outside systems an order touches.",
     skills: [
-      { name: "End-to-end workflow design", usedIn: ["redfox-courier", "growve-design-system"] },
-      { name: "Designing from the data model", usedIn: ["redfox-courier"] },
-      { name: "Dashboards", usedIn: ["kalpins"] },
-      { name: "Landing pages and lead generation", usedIn: ["walherb", "redfox-courier"] },
-      { name: "Empty, loading and error states", usedIn: ["kalpins", "growve-design-system"] },
-      { name: "Research", usedIn: ["hygwell"] },
+      { name: "Amazon SP-API", usedIn: ["crm"] },
+      { name: "Blue Dart", usedIn: ["crm", "logistics"] },
+      { name: "XpressBees", usedIn: ["crm", "logistics"] },
+      { name: "Razorpay", usedIn: ["storefront"] },
+      { name: "Amazon SQS", usedIn: ["growve"] },
+      { name: "AWS S3", usedIn: ["growve"] },
+      { name: "PlayFab", usedIn: ["fitness"] },
+      { name: "Strava", usedIn: ["fitness"] },
+      { name: "Google Fit", usedIn: ["fitness"] },
+      { name: "ML Kit", usedIn: ["fitness"] },
     ],
   },
   {
-    id: "systems",
-    title: "Design systems",
+    id: "backend",
+    title: "Services and automation",
+    blurb: "APIs, gateways, workers and schedulers.",
     skills: [
-      { name: "Colour and design tokens", usedIn: ["growve-design-system"] },
-      { name: "Typography and spacing", usedIn: ["growve-design-system"] },
-      { name: "Figma variables", usedIn: ["growve-design-system"] },
-      { name: "Components: buttons, forms, tables", usedIn: ["growve-design-system"] },
-      { name: "Documentation", usedIn: ["growve-design-system"] },
+      { name: "Node.js", usedIn: ["growve"] },
+      { name: "Express.js", usedIn: ["growve"] },
+      { name: "Fastify", usedIn: ["growve"] },
+      { name: "Nest.js", usedIn: ["fitness"] },
+      { name: "REST APIs", usedIn: ["growve", "linky"] },
+      { name: "Workers, schedulers and cron jobs", usedIn: ["crm"] },
+      { name: "Firebase / Firestore", usedIn: ["growve"] },
+      { name: "C#", usedIn: ["fitness"] },
     ],
   },
   {
-    id: "delivery",
-    title: "Working with engineering",
+    id: "data",
+    title: "Data",
+    blurb: "Schemas for orders, customers, inventory and shipments.",
     skills: [
-      { name: "Design to live build with Claude", usedIn: ["walherb"] },
-      { name: "Coordinating with development", usedIn: ["hygwell", "redfox-courier"] },
-      { name: "Graphics", usedIn: ["hygwell"] },
+      { name: "PostgreSQL", usedIn: ["crm", "growve"] },
+      { name: "MySQL", usedIn: ["fitness"] },
+      { name: "MongoDB" },
+    ],
+  },
+  {
+    id: "frontend",
+    title: "Web and mobile",
+    blurb: "Storefronts, admin panels and apps.",
+    skills: [
+      { name: "Next.js", usedIn: ["growve"] },
+      { name: "React.js" },
+      { name: "React Native", usedIn: ["linky", "fitness"] },
+      { name: "TypeScript" },
+      { name: "JavaScript (ES6+)" },
+      { name: "Redux" },
+      { name: "HTML5 and CSS3" },
+    ],
+  },
+  {
+    id: "tools",
+    title: "Tools and practice",
+    blurb: "How the work gets shipped.",
+    skills: [
+      { name: "Git and GitHub" },
+      { name: "Postman" },
+      { name: "Android Studio" },
+      { name: "Xcode" },
+      { name: "VPS deployment", usedIn: ["growve"] },
+      { name: "Google Search Console and Analytics", usedIn: ["logistics"] },
+      { name: "Agile / Scrum" },
     ],
   },
 ];
-
-export const tools: readonly string[] = ["Figma, including variables", "Adobe Creative Suite", "Claude"];

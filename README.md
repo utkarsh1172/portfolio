@@ -1,24 +1,10 @@
-# Abhay Maske: Portfolio
+# Utkarsh Kamble — Portfolio
 
-Portfolio for Abhay Maske, Product Designer and UI/UX Designer. Three case studies (RedFox Courier, the Growve
-Design System and Walherb), smaller selected work, experience, skills and contact.
+Personal portfolio for a full-stack engineer working on logistics, e-commerce and CRM platforms.
+Built with Next.js (App Router), React Server Components, TypeScript (strict), Tailwind CSS v4 and Motion.
 
-Built with Next.js (App Router, fully static), React Server Components, TypeScript (strict) and Tailwind CSS v4.
-
-## Content rules
-
-- **Every fact comes from Abhay's resume or a confirmed answer.** Don't add metrics, tools, clients or research
-  that aren't confirmed.
-- **No real client UI or data.** Case-study visuals are diagrams of structure and flow, defined as data in
-  `src/data/projects.ts` and drawn by `src/components/case-study/Diagram.tsx`.
-- **Unconfirmed facts are placeholders:** `{{LABEL: note}}`. Components never render them (`src/lib/placeholders.ts`),
-  and `npm run check` fails if one reaches a built page or script.
-
-```bash
-npm run placeholders   # list every placeholder still waiting for a fact
-```
-
-Fill one by replacing the whole `{{…}}` string with the confirmed text; the block appears on the next build.
+Every fact on the site comes from the resume. The order desk demo is the only simulated content and is
+labelled as such in the UI.
 
 ## Quick start
 
@@ -31,99 +17,132 @@ npm run dev          # http://localhost:3000
 
 ## Scripts
 
-| Command                      | What it does                                                         |
-| ---------------------------- | -------------------------------------------------------------------- |
-| `npm run dev`                | Development server                                                   |
-| `npm run build`              | Production build                                                     |
-| `npm start`                  | Serve the production build                                           |
-| `npm run typecheck`          | TypeScript, strict mode                                              |
-| `npm run lint`               | ESLint (Next.js core-web-vitals + TypeScript rules)                  |
-| `npm run format`             | Prettier, including Tailwind class sorting                           |
-| `npm test`                   | Unit tests with Node's built-in test runner                          |
-| `npm run placeholders`       | List unfilled `{{placeholders}}` in `src/data`                       |
-| `npm run placeholders:built` | Fail if a placeholder reached the build output                       |
-| `npm run contrast`           | WCAG AA check of every text colour on every surface, both themes     |
-| `npm run check`              | Everything above in sequence, including the build: run before a push |
+| Command             | What it does                                           |
+| ------------------- | ------------------------------------------------------ |
+| `npm run dev`       | Development server                                     |
+| `npm run build`     | Production build                                       |
+| `npm start`         | Serve the production build                             |
+| `npm run typecheck` | TypeScript, strict mode                                |
+| `npm run lint`      | ESLint (Next.js core-web-vitals + TypeScript rules)    |
+| `npm run format`    | Prettier, including Tailwind class sorting             |
+| `npm test`          | Unit tests with Node's built-in test runner            |
+| `npm run check`     | All of the above in sequence: run before every push    |
+| `npm run land-dots` | Regenerate the globe's land-point data (rarely needed) |
 
-## Editing content
+## Environment variables
 
-Everything the site says lives in `src/data/`:
-
-| File            | Holds                                                                |
-| --------------- | -------------------------------------------------------------------- |
-| `profile.ts`    | Name, role, value proposition, location, email, LinkedIn, resume     |
-| `projects.ts`   | The three case studies (nine-part structure) and selected-work cards |
-| `experience.ts` | Roles (a role with two positions shows the promotion), education     |
-| `skills.ts`     | Skill groups, each linked to the work that shows it, and tools       |
-| `navigation.ts` | Header and mobile-menu sections                                      |
-
-- **Resume:** put the PDF in `public/resume/` and set `profile.resume` to `{ path: "/resume/<file>.pdf", fileName: "<file>.pdf" }`.
-  The download buttons appear in the hero, contact section and footer.
-- **Email / location:** replace the placeholders in `profile.ts`; the contact rows appear automatically.
-
-## Environment
+Copy `.env.example` to `.env.local`. All variables are validated with Zod.
 
 | Variable               | Required           | Purpose                                                                           |
 | ---------------------- | ------------------ | --------------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_SITE_URL` | Yes, in production | Canonical URL, sitemap, robots.txt, Open Graph tags. A bad value fails the build. |
+| `RESEND_API_KEY`       | No                 | Enables email delivery for the contact form through [Resend](https://resend.com). |
+| `CONTACT_FROM_EMAIL`   | With Resend        | Sender, on a domain verified in Resend, e.g. `Portfolio <hi@your-domain.com>`.    |
+| `CONTACT_TO_EMAIL`     | No                 | Where messages go. Defaults to the email in `src/data/profile.ts`.                |
 
-The page is static, so a change takes effect on the next deploy.
+**Contact form behaviour.** Without `RESEND_API_KEY` and `CONTACT_FROM_EMAIL`, the form opens the visitor's
+email app with the message pre-filled. With both set, it sends through a server action: validated on the
+client and again on the server with the same Zod schema, protected by a honeypot field, with a 10-second
+timeout and a clear fallback message if delivery fails. The page is static, so changing these variables
+takes effect on the next deploy.
+
+## Deploying to Vercel
+
+1. Push the repository to GitHub.
+2. In Vercel, choose **Add New → Project** and import the repository. Vercel detects Next.js; no build
+   settings are needed.
+3. Under **Environment Variables**, add `NEXT_PUBLIC_SITE_URL` (your production URL) and, optionally, the
+   Resend variables.
+4. Deploy. Add your custom domain under **Settings → Domains**, then update `NEXT_PUBLIC_SITE_URL` to match
+   and redeploy.
+
+The home page is statically prerendered and revalidated daily, so "years of experience" updates itself.
 
 ## Architecture
 
 ```text
 src/
-├── app/                     Routes: home, /work/[slug], OG images, sitemap, robots, 404
+├── app/                     Routes and route-level files
+│   ├── layout.tsx           Fonts, metadata, JSON-LD, theme script, skip link
+│   ├── page.tsx             Composes the sections (server component)
+│   ├── actions/contact.ts   Server action: validate + deliver contact messages
+│   ├── loading.tsx, not-found.tsx, robots.ts, sitemap.ts, opengraph-image.tsx, icon.svg
+│   └── globals.css          Design tokens (CSS variables) + Tailwind v4 theme
 ├── components/
-│   ├── layout/              Header (glass bar, scroll spy), MobileMenu, ThemeToggle, Footer, Effects
-│   ├── sections/            One file per home-page section
-│   ├── case-study/          CaseStudyView (nine-part page) and Diagram
+│   ├── layout/              Header (route nav, scroll spy), MobileMenu, ThemeToggle, Footer
+│   ├── sections/            One file per page section, plus RoleList and ContactForm
+│   ├── visualizations/      Globe, OrderPipeline, FlowDiagram, OrderDesk + lazy wrappers
+│   ├── providers/           CaseSelectionProvider (cross-section "open this case study")
 │   └── ui/                  Button, Badge, Card, Section, SectionHeading, CopyButton
-├── data/                    All site content
-├── hooks/                   useScrollSpy, useTheme
-├── lib/                     Placeholders, theme, site config, OG image, small helpers
-└── types/                   Shared content types
+├── data/                    All site content: profile, projects, experience, skills, navigation…
+├── hooks/                   useScrollSpy, useInView, useTheme
+├── lib/                     Pure logic: order simulation, contact schema, env, scroll, theme
+├── types/                   Shared content types
+└── fonts/                   Self-hosted Barlow (SIL Open Font License)
 ```
 
-Components are server components by default. Client JavaScript is limited to the header (scroll spy, mobile menu),
-the theme toggle, the copy-email button and `Effects` (scroll reveal and card sheen).
+**Server and client boundaries.** Components are server components by default. Client components are
+limited to what is genuinely interactive: the header, the case-study browser, the skills map, the role
+accordion, the contact form and the visualisations. Static sections (hero, about, experience shell, resume,
+contact details, footer) ship no component JavaScript.
 
-## Visual system
+**Content is separate from UI.** Everything the site says lives in `src/data/`. Types in `src/types/` make
+mistakes fail the build: for example, a skill's `usedIn` must reference a real case-study or role id.
 
-- **Tokens:** every colour is a CSS custom property in `src/app/globals.css`, stored as RGB channels so Tailwind can
-  apply opacity. Dark is the default; `[data-theme="light"]` overrides. One accent colour.
-- **Glass** (`.glass`): tinted translucent fill, `backdrop-filter: blur(20px) saturate(140%)`, hairline border, inset
-  top highlight, soft shadow. Used for the nav, cards, meta panels and the contact card. Long-form text sits on
-  `.solid` instead. The tint caps how bright the background can get under text, which is what keeps it readable.
-- **Background:** two slow accent blooms (transform-only animation) and an SVG grain layer, fixed behind content.
-- **Fallbacks:** no `backdrop-filter` support → solid surfaces. `prefers-reduced-transparency` → solid surfaces and
-  no blooms. `prefers-reduced-motion` → no blooms, no movement, nothing waits on scroll. Phones blur only the nav bar
-  (12px) because `backdrop-filter` is expensive on low-end GPUs.
-- **Type:** Geist (variable) with Instrument Serif italic accents, self-hosted under the OFL (`src/fonts/OFL-*.txt`),
-  with size-adjusted fallbacks so the swap doesn't shift layout.
-- **Motion:** 150–300 ms. Scroll reveal only hides content once JavaScript has run, and shows anything already on
-  screen immediately. The hero headline and lede move but never fade, so they count for Largest Contentful Paint.
+**Logic is separate from views.** The order desk simulation (`lib/order-simulation.ts`) is a pure reducer
+with injectable randomness and time, so it is unit-tested deterministically. The component is a thin view.
 
-## Accessibility
+### Editing content
 
-- `npm run contrast` fails the build below WCAG AA (4.5:1) for any text colour on any surface in either theme,
-  including text on glass over the brightest point of the background.
-- Skip link to `<main>`, visible focus on everything (a focused case-study link outlines its whole card), semantic
-  landmarks and headings, one `h1` per page.
-- Mobile menu is a modal dialog: focus moves in, Tab is trapped, Escape closes it and focus returns to the button.
-- Diagrams are real lists and figures with captions, so they read correctly without the visuals.
+- **Links:** fill `links.github` / `links.linkedin` in `src/data/profile.ts`; the buttons appear automatically.
+- **Metrics:** update a project's `outcome` in `src/data/projects.ts`.
+- **Resume:** replace `public/resume/Utkarsh_Kamble_Resume.docx` (keep the file name, or update `profile.resume`).
+- **Experience start date:** `CAREER_START` in `src/data/profile.ts`.
 
 ## Performance
 
-Lighthouse 12 against the production build (`next start`), October 2026. Lab numbers, not field data:
+- The hero headline (the LCP element) renders from server HTML with a CSS-only entrance animation, so it
+  never waits for JavaScript.
+- The globe (canvas, ~6 KB of code) and the order desk load after the critical path via `next/dynamic`, with
+  same-size placeholders so nothing shifts.
+- Fonts are self-hosted through `next/font/local`: no third-party requests, no layout shift on swap.
+- The contact schema uses `zod/mini` so validation adds only a few KB to the browser bundle.
+- Animation loops pause off screen and stop entirely under `prefers-reduced-motion`.
 
-| Page                   | Device  | Performance | Accessibility | Best Practices | SEO |
-| ---------------------- | ------- | ----------- | ------------- | -------------- | --- |
-| `/`                    | Mobile  | 97          | 100           | 100            | 100 |
-| `/`                    | Desktop | 100         | 100           | 100            | 100 |
-| `/work/redfox-courier` | Mobile  | 97          | 100           | 100            | 100 |
-| `/work/redfox-courier` | Desktop | 100         | 100           | 100            | 100 |
+Measured locally against the previous Next.js 14 build (production servers, headless Chromium; mobile with
+4× CPU throttling). These are lab numbers, not field data:
 
-CLS is 0 on every page. Mobile LCP is about 2.4–2.6 s under Lighthouse's simulated slow 4G (0.5 s on desktop); most of
-it is the stylesheet request. Inlining the CSS (`experimental.inlineCss`) was tried and dropped: it more than doubled the HTML
-transfer for a gain within run-to-run noise.
+| Metric            | Before (Next 14) | After (Next 16) |
+| ----------------- | ---------------- | --------------- |
+| LCP, mobile       | 2.2–2.4 s        | ~1.0 s          |
+| LCP, desktop      | ~1.5 s           | 0.4–0.65 s      |
+| CLS, mobile       | 0.06–0.13        | 0.00            |
+| JavaScript (gzip) | 156 KB           | 233 KB          |
+
+JavaScript grew mainly because the React 19 / Next.js 16 runtime is larger than React 18 / Next.js 14.
+LCP and CLS improved regardless.
+
+## Accessibility
+
+Semantic landmarks and a single `h1`; skip link; visible focus states; WAI-ARIA tabs with arrow-key support
+(pipeline and case studies); a mobile menu that traps focus, closes on Escape and restores focus; labelled
+form fields with inline, announced errors; status changes in live regions; colour never used as the only
+signal; 16 px form inputs (prevents iOS zoom-on-focus); reduced-motion support throughout.
+
+## Testing
+
+`npm test` runs unit tests for the order simulation, the contact schema and mailto builder, and the
+years-of-experience calculation. During the migration the production build was also checked in a headless
+browser: 38 functional checks (navigation, mobile menu, theme persistence, cross-section links, filters,
+tabs, demo controls, form validation, copy, resume download, 404) plus console-error and horizontal-overflow
+checks at 320, 390, 820, 1024, 1440 and 2560 px. Those browser checks are not part of this repository.
+
+## Design decisions
+
+- **No GSAP or Three.js.** The design's motion is component transitions (Motion) and one canvas globe; neither
+  needs a timeline library or WebGL. Adding them would cost bundle size without visible benefit.
+- **No scroll-reveal wrappers.** The design deliberately animates only the hero entrance and responses to
+  user actions. Section-by-section reveals would change the design.
+- **Tooling versions.** ESLint 9 rather than 10 and TypeScript 6 rather than 7, because Next.js's ESLint
+  plugins and typescript-eslint do not support the newer majors yet. Node's built-in test runner instead of
+  Vitest keeps the dependency tree small.

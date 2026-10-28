@@ -5,18 +5,18 @@ import { useTheme } from "@/hooks/useTheme";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const light = theme === "light";
-  const label = light ? "Switch to dark theme" : "Switch to light theme";
+  const label =
+    theme === "dark" ? "Switch to light theme" : theme === "light" ? "Switch to dark theme" : "Switch theme";
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(light ? "dark" : "light")}
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       aria-label={label}
       title={label}
-      className="grid h-11 w-11 place-items-center rounded-full text-muted transition-colors hover:bg-ink/8 hover:text-ink"
+      className="grid h-11 w-11 place-items-center rounded-full text-muted transition hover:bg-surface-2 hover:text-ink"
     >
-      {light ? <Moon size={18} aria-hidden /> : <Sun size={18} aria-hidden />}
+      {theme === "dark" ? <Sun size={18} aria-hidden /> : <Moon size={18} aria-hidden />}
     </button>
   );
 }

@@ -1,31 +1,45 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
-import { Effects } from "@/components/layout/Effects";
 import { experience } from "@/data/experience";
 import { profile } from "@/data/profile";
 import { themeInitScript } from "@/lib/theme";
 import { siteDescription, siteUrl } from "@/lib/site";
 import "./globals.css";
 
-// Self-hosted (SIL Open Font License, see src/fonts/OFL-*.txt). next/font sizes the
-// fallback fonts to match, so swapping in the web font causes no layout shift.
-const geist = localFont({
-  src: [{ path: "../fonts/geist-latin-wght-normal.woff2", weight: "100 900", style: "normal" }],
-  variable: "--font-geist",
+// Barlow superfamily, self-hosted (SIL Open Font License): condensed for display,
+// semi-condensed for UI labels, regular for body text.
+const barlowCondensed = localFont({
+  src: [
+    { path: "../fonts/barlow-condensed-latin-600-normal.woff2", weight: "600" },
+    { path: "../fonts/barlow-condensed-latin-700-normal.woff2", weight: "700" },
+  ],
+  variable: "--font-barlow-condensed",
   display: "swap",
-  fallback: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "Arial", "sans-serif"],
+  fallback: ["Arial Narrow", "sans-serif"],
 });
-// Only the italic is used, for accent words, including the headline.
-const instrumentSerif = localFont({
-  src: [{ path: "../fonts/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" }],
-  variable: "--font-instrument-serif",
+const barlowSemi = localFont({
+  src: [
+    { path: "../fonts/barlow-semi-condensed-latin-500-normal.woff2", weight: "500" },
+    { path: "../fonts/barlow-semi-condensed-latin-600-normal.woff2", weight: "600" },
+    { path: "../fonts/barlow-semi-condensed-latin-700-normal.woff2", weight: "700" },
+  ],
+  variable: "--font-barlow-semi",
   display: "swap",
-  adjustFontFallback: "Times New Roman",
-  fallback: ["Iowan Old Style", "Palatino Linotype", "Georgia", "serif"],
+  fallback: ["Arial Narrow", "sans-serif"],
+});
+const barlow = localFont({
+  src: [
+    { path: "../fonts/barlow-latin-400-normal.woff2", weight: "400" },
+    { path: "../fonts/barlow-latin-500-normal.woff2", weight: "500" },
+    { path: "../fonts/barlow-latin-600-normal.woff2", weight: "600" },
+  ],
+  variable: "--font-barlow",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
 });
 
-const title = `${profile.name}, ${profile.role}`;
+const title = `${profile.name}, Full-Stack Engineer for Logistics and E-commerce`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -35,14 +49,16 @@ export const metadata: Metadata = {
   authors: [{ name: profile.name, url: siteUrl }],
   creator: profile.name,
   keywords: [
-    "Abhay Maske",
-    "product designer",
-    "UI/UX designer",
-    "B2B SaaS design",
-    "CRM design",
-    "logistics UX",
-    "design systems",
-    "Figma variables",
+    "Utkarsh Kamble",
+    "full-stack developer Mumbai",
+    "logistics software engineer",
+    "e-commerce developer",
+    "CRM developer",
+    "Amazon SP-API",
+    "Next.js",
+    "Node.js",
+    "PostgreSQL",
+    "React Native",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -52,8 +68,8 @@ export const metadata: Metadata = {
     title,
     description: siteDescription,
     locale: "en_IN",
-    firstName: "Abhay",
-    lastName: "Maske",
+    firstName: "Utkarsh",
+    lastName: "Kamble",
   },
   twitter: { card: "summary_large_image", title, description: siteDescription },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
@@ -64,7 +80,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0a0b0f",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0a1626" },
+    { media: "(prefers-color-scheme: light)", color: "#ecf1f6" },
+  ],
 };
 
 const current = experience.find((r) => r.current);
@@ -73,27 +92,39 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: profile.name,
-  jobTitle: "Product Designer",
+  jobTitle: profile.role,
   description: siteDescription,
+  email: `mailto:${profile.email}`,
+  image: `${siteUrl}${profile.photo.src}`,
   url: siteUrl,
+  address: { "@type": "PostalAddress", addressLocality: "Mumbai", addressRegion: "Maharashtra", addressCountry: "IN" },
   worksFor: current ? { "@type": "Organization", name: current.company } : undefined,
-  alumniOf: { "@type": "CollegeOrUniversity", name: "Kirti M. Doongursee College" },
-  hasCredential: { "@type": "EducationalOccupationalCredential", name: "Google UX Design Professional Certificate" },
-  knowsAbout: ["Product design", "UI/UX design", "Design systems", "Figma variables", "CRM", "Logistics", "B2B SaaS"],
-  sameAs: [profile.links.linkedin],
+  alumniOf: [
+    { "@type": "EducationalOrganization", name: "Newton School" },
+    { "@type": "CollegeOrUniversity", name: "University of Mumbai" },
+  ],
+  knowsAbout: [
+    "Logistics software",
+    "E-commerce",
+    "CRM",
+    "Amazon SP-API",
+    "Next.js",
+    "Node.js",
+    "PostgreSQL",
+    "React Native",
+  ],
+  sameAs: [profile.links.github, profile.links.linkedin].filter(Boolean),
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${instrumentSerif.variable}`}
-      data-theme="dark"
-      data-scroll-behavior="smooth"
+      className={`${barlowCondensed.variable} ${barlowSemi.variable} ${barlow.variable}`}
       suppressHydrationWarning
     >
       <head>
-        {/* Applies the saved theme (dark by default) before first paint, so there is no flash. */}
+        {/* Applies a saved theme before first paint, so there is no flash. */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
@@ -102,13 +133,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <a
-          href="#main"
-          className="sr-only z-80 rounded-lg bg-accent px-4 py-2 font-semibold text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+          href="#about"
+          className="sr-only z-[80] rounded-lg bg-accent px-4 py-2 text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
         >
           Skip to content
         </a>
         {children}
-        <Effects />
       </body>
     </html>
   );

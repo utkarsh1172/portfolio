@@ -1,21 +1,30 @@
 import { profile } from "@/data/profile";
 
 export function Footer() {
+  const { github, linkedin } = profile.links;
   return (
     <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-muted sm:px-8">
+      <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-4 px-5 py-8 text-sm text-muted sm:px-8">
         <p>
-          © {new Date().getFullYear()} {profile.name}
+          {profile.name}, {new Date().getFullYear()}. Built with Next.js, TypeScript, Tailwind CSS and Motion.
         </p>
-        <nav aria-label="Footer" className="flex flex-wrap items-center gap-x-5 gap-y-2 font-medium text-ink">
-          <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
-            LinkedIn
-          </a>
-          {profile.resume && (
-            <a href={profile.resume.path} download={profile.resume.fileName} className="hover:text-accent">
-              Resume
+        <nav
+          aria-label="Elsewhere"
+          className="flex flex-wrap items-center gap-x-5 gap-y-2 font-semi font-semibold text-ink"
+        >
+          {github && (
+            <a href={github} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
+              GitHub
             </a>
           )}
+          {linkedin && (
+            <a href={linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
+              LinkedIn
+            </a>
+          )}
+          <a href={profile.resume.path} download={profile.resume.fileName} className="hover:text-accent">
+            Resume
+          </a>
           <a href="#top" className="hover:text-accent">
             Back to top
           </a>
