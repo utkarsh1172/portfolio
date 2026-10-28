@@ -1,73 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Design tokens.
- *
- * Colours are stored as RGB channels so both Tailwind utilities (via the
- * @theme mapping below) and canvas code (Globe reads them at runtime) share
- * one source of truth.
- *
- * Palette, named for a container port:
- *   harbor   deep sea-blue night base (dark) / overcast yard grey (light)
- *   hull     raised surfaces
- *   orange   shipping-container orange: actions, active route, focus
- *   teal     delivered / healthy status
- *   amber    in transit / pending status
+ * Design tokens. Colours are RGB channels so Tailwind utilities can apply
+ * opacity (bg-accent/10). Dark is the default; [data-theme="light"] overrides.
  */
 :root {
-  --bg: 236 241 246;
-  --bg-2: 226 233 241;
-  --surface: 255 255 255;
-  --surface-2: 241 245 249;
-  --line: 196 208 222;
-  --ink: 13 27 44;
-  --muted: 74 94 118;
-  --accent: 214 77 18;
-  --accent-ink: 255 255 255;
-  --teal: 13 128 116;
-  --amber: 160 100 0;
-  --globe-dot: 120 140 165;
-  --globe-sea: 214 224 236;
-  /* Waybill card: a printed label sitting on the page. */
-  --paper: 255 255 255;
-  --paper-ink: 13 27 44;
-  --paper-muted: 84 102 126;
-  --paper-line: 205 215 228;
-  --glow: 0.1;
-  color-scheme: light;
-
-  /* Keep content clear of translucent phone system bars (zero on desktop). */
-  box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-/* Dark tokens: system preference (unless the visitor chose light), or an explicit choice. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: 10 22 38;
-    --bg-2: 13 28 47;
-    --surface: 17 34 57;
-    --surface-2: 22 43 71;
-    --line: 36 62 94;
-    --ink: 232 238 246;
-    --muted: 147 166 190;
-    --accent: 255 112 51;
-    --accent-ink: 10 22 38;
-    --teal: 52 199 183;
-    --amber: 244 186 72;
-    --globe-dot: 92 122 160;
-    --globe-sea: 15 32 54;
-    --paper: 232 238 246;
-    --paper-ink: 10 22 38;
-    --paper-muted: 70 88 112;
-    --paper-line: 190 203 220;
-    --glow: 0.18;
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
   --bg: 10 22 38;
   --bg-2: 13 28 47;
   --surface: 17 34 57;
@@ -77,16 +14,25 @@
   --muted: 147 166 190;
   --accent: 255 112 51;
   --accent-ink: 10 22 38;
-  --teal: 52 199 183;
-  --amber: 244 186 72;
-  --globe-dot: 92 122 160;
-  --globe-sea: 15 32 54;
-  --paper: 232 238 246;
-  --paper-ink: 10 22 38;
-  --paper-muted: 70 88 112;
-  --paper-line: 190 203 220;
-  --glow: 0.18;
   color-scheme: dark;
+
+  /* Keep content clear of translucent phone system bars (zero on desktop). */
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+:root[data-theme="light"] {
+  --bg: 236 241 246;
+  --bg-2: 226 233 241;
+  --surface: 255 255 255;
+  --surface-2: 241 245 249;
+  --line: 196 208 222;
+  --ink: 13 27 44;
+  --muted: 74 94 118;
+  --accent: 214 77 18;
+  --accent-ink: 255 255 255;
+  color-scheme: light;
 }
 
 /* Expose tokens as Tailwind utilities: bg-surface, text-muted, border-line/60 ... */
@@ -100,16 +46,8 @@
   --color-muted: rgb(var(--muted));
   --color-accent: rgb(var(--accent));
   --color-accent-ink: rgb(var(--accent-ink));
-  --color-teal: rgb(var(--teal));
-  --color-amber: rgb(var(--amber));
-  --color-paper: rgb(var(--paper));
-  --color-paper-ink: rgb(var(--paper-ink));
-  --color-paper-muted: rgb(var(--paper-muted));
-  --color-paper-line: rgb(var(--paper-line));
 
-  /* Barlow superfamily: one family, three widths (variables set by next/font). */
   --font-sans: var(--font-barlow), "Barlow", system-ui, sans-serif;
-  --font-semi: var(--font-barlow-semi), "Barlow Semi Condensed", "Arial Narrow", sans-serif;
   --font-display: var(--font-barlow-condensed), "Barlow Condensed", "Arial Narrow", sans-serif;
 
   --container-page: 76rem;
@@ -118,7 +56,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 5rem);
+    scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 6rem);
     -webkit-text-size-adjust: 100%;
   }
 
@@ -131,17 +69,6 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-  }
-
-  /* Paint the status-bar strip behind a translucent phone toolbar. */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0 0 auto;
-    height: env(safe-area-inset-top, 0px);
-    z-index: 60;
-    background: rgb(var(--bg) / 0.9);
-    backdrop-filter: blur(12px);
   }
 
   /* Tailwind v4 resets buttons to the default cursor; restore the pointer. */
@@ -162,14 +89,16 @@
   }
 }
 
-/* Type styles too specific to express as plain utilities. */
 @layer components {
-  /* Condensed display type, set like highway and yard signage. */
   .display {
     font-family: var(--font-display);
     font-weight: 700;
-    line-height: 0.92;
+    line-height: 0.95;
     letter-spacing: -0.012em;
+  }
+
+  .serif-accent {
+    font-style: italic;
   }
 
   .h-section {
@@ -186,55 +115,45 @@
     color: rgb(var(--muted));
     max-width: 62ch;
   }
-}
 
-/* Dashed route lines used by the nav, pipeline and journey. */
-@utility route-dash {
-  background-image: linear-gradient(90deg, rgb(var(--line)) 50%, transparent 0);
-  background-size: 10px 2px;
-  background-repeat: repeat-x;
-}
-
-@utility route-dash-y {
-  background-image: linear-gradient(180deg, rgb(var(--line)) 50%, transparent 0);
-  background-size: 2px 10px;
-  background-repeat: repeat-y;
-}
-
-@utility scroll-x {
-  overflow-x: auto;
-  scrollbar-width: thin;
-  -webkit-overflow-scrolling: touch;
-}
-
-@utility pulse-ring {
-  animation: pulse-ring 1.8s ease-out infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.6);
-    opacity: 0.8;
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(var(--muted));
   }
-  100% {
-    transform: scale(2.2);
-    opacity: 0;
+
+  /* Surfaces. Phase 3 turns .glass into frosted glass; until then both are solid. */
+  .glass,
+  .solid {
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--line));
+  }
+
+  .menu-panel {
+    background: rgb(var(--bg));
+  }
+
+  .thumb {
+    background: rgb(var(--bg-2));
+    border: 1px solid rgb(var(--line));
+  }
+
+  .lift {
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .lift:hover {
+    transform: translateY(-2px);
   }
 }
 
 /*
- * Hero entrance. Pure CSS so the headline (the LCP element) paints without
- * waiting for JavaScript to hydrate. Stagger via the --i / --d custom props.
+ * Entrance for above-the-fold content. Pure CSS so the headline (the LCP
+ * element) paints without waiting for JavaScript. Stagger via --d.
  */
-@keyframes hero-rise {
-  from {
-    transform: translateY(105%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
 @keyframes hero-fade {
   from {
     opacity: 0;
@@ -246,130 +165,9 @@
   }
 }
 
-@keyframes hero-zoom {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@utility hero-rise {
-  @media (min-width: 40rem) {
-    animation: hero-rise 0.8s cubic-bezier(0.2, 0.7, 0.1, 1) both;
-    animation-delay: calc(100ms + var(--i, 0) * 90ms);
-  }
-}
-
 @utility hero-fade {
-  animation: hero-fade 0.6s ease-out both;
+  animation: hero-fade 0.5s ease-out both;
   animation-delay: var(--d, 0s);
-}
-
-@utility hero-zoom {
-  animation: hero-zoom 1s ease-out 0.2s both;
-}
-
-/*
- * Waybill hero.
- *
- * One orchestrated load sequence, CSS only so nothing waits for JavaScript:
- * name rises (0.1s) -> photo settles (0.25s) -> route draws (0.5s) ->
- * waybill prints row by row (0.6s+) -> copy and actions fade in -> header.
- * The photo animates transform only (never opacity) so it can count as LCP
- * the moment it paints.
- */
-@keyframes photo-settle {
-  from {
-    transform: translateY(28px) scale(1.035);
-  }
-  to {
-    transform: none;
-  }
-}
-
-@keyframes print-row {
-  from {
-    opacity: 0;
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    opacity: 1;
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-@keyframes label-drop {
-  from {
-    opacity: 0;
-    transform: translateY(18px) rotate(var(--tilt, 0deg));
-  }
-  to {
-    opacity: 1;
-    transform: rotate(var(--tilt, 0deg));
-  }
-}
-
-@keyframes bars-in {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-
-@keyframes route-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@utility photo-settle {
-  animation: photo-settle 1.1s cubic-bezier(0.2, 0.7, 0.1, 1) 0.25s both;
-}
-
-@utility label-drop {
-  animation: label-drop 0.7s cubic-bezier(0.2, 0.7, 0.1, 1) 0.55s both;
-}
-
-@utility print-row {
-  animation: print-row 0.45s steps(12, end) both;
-  animation-delay: calc(0.75s + var(--i, 0) * 90ms);
-}
-
-@utility bars-in {
-  transform-origin: bottom;
-  animation: bars-in 0.5s ease-out 1.35s both;
-}
-
-@utility route-draw {
-  stroke-dasharray: 6 8;
-  stroke-dashoffset: 400;
-  animation: route-draw 1.6s ease-out 0.5s both;
-}
-
-/* Fade the photo into the page on every side, harder at the bottom. */
-@utility photo-fade {
-  -webkit-mask-image:
-    radial-gradient(ellipse 50% 58% at 50% 42%, #000 46%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 16%, #000 58%, transparent 96%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    radial-gradient(ellipse 50% 58% at 50% 42%, #000 46%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 16%, #000 58%, transparent 96%);
-  mask-composite: intersect;
-}
-
-/* Lighting behind the photo; --mx / --my are set by HeroLight on fine pointers. */
-@utility hero-glow {
-  background:
-    radial-gradient(34rem circle at var(--mx, 72%) var(--my, 38%), rgb(var(--accent) / var(--glow)), transparent 62%),
-    radial-gradient(26rem circle at 82% 70%, rgb(var(--teal) / calc(var(--glow) * 0.55)), transparent 65%);
-  transition: background-position 0.2s linear;
 }
 
 /* Arrow icons inside buttons nudge toward where the link goes. */

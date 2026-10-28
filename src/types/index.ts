@@ -1,65 +1,112 @@
-/** Content types shared by data modules and components. */
+/**
+ * Content types shared by data modules and components.
+ *
+ * Any string may hold a placeholder such as `{{METRIC: screens designed}}`
+ * for a fact that is not confirmed yet. Placeholders are never rendered
+ * (see lib/placeholders.ts) and `npm run placeholders` lists them.
+ */
 
-export type RoleId = "growve" | "ace" | "fxgetactive";
-
-export type CaseStudyId = "crm" | "logistics" | "storefront" | "gateway" | "linky" | "fitness";
-
-export type SectionId = "about" | "work" | "demo" | "career" | "stack" | "resume" | "contact";
+export type SectionId = "work" | "about" | "experience" | "skills" | "contact";
 
 export interface NavItem {
   id: SectionId;
   label: string;
 }
 
-export interface PipelineStage {
-  id: string;
-  label: string;
-  system: string;
-  caseId: CaseStudyId;
-  detail: string;
-}
+export type CaseStudySlug = "redfox-courier" | "growve-design-system" | "walherb";
 
-export interface FlowNode {
+export type RoleId = "growve" | "kalpins" | "hygwell" | "bombay-tone";
+
+export interface FlowStep {
   title: string;
   note?: string;
 }
 
-export type CaseStudyKind = "Logistics" | "CRM" | "E-commerce" | "Integration" | "Mobile";
+/** Diagrams are drawn from structure only: no screenshots, no client data. */
+export type Diagram =
+  | {
+      kind: "flow";
+      title: string;
+      caption?: string;
+      steps: FlowStep[];
+      /** Terminal branches after the last step, e.g. delivered / returned. */
+      outcomes?: FlowStep[];
+    }
+  | {
+      kind: "layers";
+      title: string;
+      caption?: string;
+      layers: { title: string; note?: string; items: string[] }[];
+    }
+  | {
+      kind: "scale";
+      title: string;
+      caption?: string;
+      rows: { name: string; size: number; weight: number; note?: string }[];
+    };
+
+export interface Decision {
+  title: string;
+  /** What was decided, in one or two sentences. */
+  detail: string;
+  /** Why: the reasoning behind it. */
+  why: string;
+}
+
+export interface LabelledPoint {
+  label: string;
+  text: string;
+}
 
 export interface CaseStudy {
-  id: CaseStudyId;
-  name: string;
+  slug: CaseStudySlug;
+  title: string;
+  company: string;
+  /** One line for cards and the page lede. */
+  summary: string;
+  tags: string[];
+  overview: {
+    role: string;
+    timeline: string;
+    team: string;
+    platform: string;
+    tools: string;
+  };
+  problem: string[];
+  users: string[];
+  constraints: string[];
+  process: { intro?: string; diagram: Diagram };
+  decisions: Decision[];
+  states: LabelledPoint[];
+  final: { intro: string; diagrams: Diagram[]; built: string[]; link?: { href: string; label: string } };
+  outcome: string[];
+  next: string[];
+}
+
+export interface WorkItem {
+  id: string;
+  title: string;
   company: string;
   period: string;
-  kind: CaseStudyKind;
-  status: "In production" | "Shipped";
   summary: string;
-  problem: string;
-  built: string[];
-  flow: FlowNode[];
-  /** Tech the resume ties to this project specifically. */
-  stack: string[];
-  /** Role whose team stack is shown separately, so nothing is over-attributed. */
-  roleId: RoleId;
-  decisions: string[];
-  outcome: string;
+  tags: string[];
+  ongoing?: boolean;
+  link?: { href: string; label: string };
+}
+
+export interface Position {
+  title: string;
+  start: string;
+  end: string;
 }
 
 export interface Role {
   id: RoleId;
-  title: string;
   company: string;
-  start: string;
-  end: string;
+  /** Most recent first; more than one shows a promotion. */
+  positions: Position[];
   current?: boolean;
-  stack?: string;
-  points: { label: string; text: string }[];
-}
-
-export interface JourneyStop {
-  year: string;
-  title: string;
-  note: string;
+  points: string[];
 }
 
 export interface Education {
@@ -71,41 +118,23 @@ export interface Education {
 export interface Certification {
   title: string;
   org: string;
-  year?: string;
-}
-
-export interface Skill {
-  name: string;
-  /** Case study ids or role ids the resume ties this skill to. */
-  usedIn?: (CaseStudyId | RoleId)[];
 }
 
 export interface SkillGroup {
   id: string;
   title: string;
-  blurb: string;
-  skills: Skill[];
-}
-
-export interface Hub {
-  id: string;
-  name: string;
-  lat: number;
-  lon: number;
-  kind: "home" | "warehouse" | "domestic";
+  skills: { name: string; usedIn?: (CaseStudySlug | RoleId)[] }[];
 }
 
 export interface Profile {
   name: string;
-  firstName: string;
   role: string;
-  headline: string;
+  /** The one-line value proposition. */
+  pitch: string;
   location: string;
   email: string;
-  phone: string;
-  phoneHref: string;
-  links: { github: string; linkedin: string; site: string };
-  resume: { path: string; fileName: string };
-  photo: { src: string; alt: string };
+  links: { linkedin: string };
+  /** Null until a PDF is added under public/resume/. */
+  resume: { path: string; fileName: string } | null;
   seeking: string;
 }

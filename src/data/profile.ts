@@ -1,32 +1,24 @@
 import type { Profile } from "@/types";
 
 /**
- * Personal details. Every fact on the site comes from Utkarsh's resume.
- * To add links, fill in `links.github` / `links.linkedin`; the UI shows those
- * buttons automatically once they are non-empty.
+ * Personal details. Facts come from Abhay's resume; anything not confirmed yet
+ * is a `{{placeholder}}`, which the site never renders.
  */
 
-/** First professional role (Fxgetactive, Oct 2022). Years of experience derive from this. */
-export const CAREER_START = { year: 2022, month: 10 };
+/** First design role (Bombay Tone internship, Jul 2023). Years of experience derive from this. */
+export const CAREER_START = { year: 2023, month: 7 };
 
 export const profile: Profile = {
-  name: "Utkarsh Kamble",
-  firstName: "Utkarsh",
-  role: "Senior Software Developer",
-  headline: "Full-stack engineer for logistics, e-commerce and CRM platforms",
-  location: "Mumbai, Maharashtra, India",
-  email: "utkarsh1172@gmail.com",
-  phone: "+91 99203 82812",
-  phoneHref: "tel:+919920382812",
+  name: "Abhay Maske",
+  role: "Product Designer | UI/UX Designer",
+  pitch:
+    "I simplify complex operational workflows across CRM, logistics and SaaS, and build the design systems that keep them consistent.",
+  location: "{{LOCATION: city to show on the site}}",
+  email: "{{EMAIL: Abhay's contact email}}",
   links: {
-    github: "https://github.com/utkarsh1172",
-    linkedin: "https://www.linkedin.com/in/utkarsh-kamble-a2a543217/",
-    site: "https://portfolio-utkarsh1172.netlify.app/",
+    linkedin: "https://www.linkedin.com/in/abhay-maske-866a93200",
   },
-  resume: { path: "/resume/Utkarsh_Kamble_Resume.pdf", fileName: "Utkarsh_Kamble_Resume.pdf" },
-  photo: {
-    src: "/images/utkarsh-kamble.jpg",
-    alt: "Utkarsh Kamble, smiling, in a navy polo shirt in an office",
-  },
-  seeking: "Exploring senior full-stack roles at logistics, shipping, e-commerce and enterprise software companies.",
+  // Add the PDF under public/resume/ and fill this in; the download buttons appear automatically.
+  resume: null,
+  seeking: "Open to Product Designer and UI/UX Designer roles in B2B SaaS, logistics, fintech and startups.",
 };

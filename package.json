@@ -1,6 +1,6 @@
 {
-  "name": "utkarsh-kamble-portfolio",
-  "version": "2.0.0",
+  "name": "abhay-maske-portfolio",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -16,8 +16,9 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "test": "node --test --experimental-strip-types --no-warnings \"src/**/*.test.ts\"",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build",
-    "land-dots": "node scripts/build-land-dots.mjs"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build && npm run placeholders:built",
+    "placeholders": "node scripts/placeholders.mjs",
+    "placeholders:built": "node scripts/placeholders.mjs --built"
   },
   "dependencies": {
     "lucide-react": "1.55.0",
@@ -32,14 +33,11 @@
     "@types/node": "26.6.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "d3-geo": "3.1.1",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.3",
     "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "0.8.1",
     "tailwindcss": "4.3.3",
-    "topojson-client": "3.1.0",
-    "typescript": "6.0.3",
-    "world-atlas": "2.0.2"
+    "typescript": "6.0.3"
   }
 }

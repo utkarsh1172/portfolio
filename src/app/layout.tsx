@@ -39,7 +39,7 @@ const barlow = localFont({
   fallback: ["system-ui", "sans-serif"],
 });
 
-const title = `${profile.name}, Full-Stack Engineer for Logistics and E-commerce`;
+const title = `${profile.name}, ${profile.role}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -49,16 +49,14 @@ export const metadata: Metadata = {
   authors: [{ name: profile.name, url: siteUrl }],
   creator: profile.name,
   keywords: [
-    "Utkarsh Kamble",
-    "full-stack developer Mumbai",
-    "logistics software engineer",
-    "e-commerce developer",
-    "CRM developer",
-    "Amazon SP-API",
-    "Next.js",
-    "Node.js",
-    "PostgreSQL",
-    "React Native",
+    "Abhay Maske",
+    "product designer",
+    "UI/UX designer",
+    "B2B SaaS design",
+    "CRM design",
+    "logistics UX",
+    "design systems",
+    "Figma variables",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -68,8 +66,8 @@ export const metadata: Metadata = {
     title,
     description: siteDescription,
     locale: "en_IN",
-    firstName: "Utkarsh",
-    lastName: "Kamble",
+    firstName: "Abhay",
+    lastName: "Maske",
   },
   twitter: { card: "summary_large_image", title, description: siteDescription },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
@@ -80,10 +78,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a1626" },
-    { media: "(prefers-color-scheme: light)", color: "#ecf1f6" },
-  ],
+  themeColor: "#0a0b0f",
 };
 
 const current = experience.find((r) => r.current);
@@ -92,28 +87,14 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: profile.name,
-  jobTitle: profile.role,
+  jobTitle: "Product Designer",
   description: siteDescription,
-  email: `mailto:${profile.email}`,
-  image: `${siteUrl}${profile.photo.src}`,
   url: siteUrl,
-  address: { "@type": "PostalAddress", addressLocality: "Mumbai", addressRegion: "Maharashtra", addressCountry: "IN" },
   worksFor: current ? { "@type": "Organization", name: current.company } : undefined,
-  alumniOf: [
-    { "@type": "EducationalOrganization", name: "Newton School" },
-    { "@type": "CollegeOrUniversity", name: "University of Mumbai" },
-  ],
-  knowsAbout: [
-    "Logistics software",
-    "E-commerce",
-    "CRM",
-    "Amazon SP-API",
-    "Next.js",
-    "Node.js",
-    "PostgreSQL",
-    "React Native",
-  ],
-  sameAs: [profile.links.github, profile.links.linkedin].filter(Boolean),
+  alumniOf: { "@type": "CollegeOrUniversity", name: "Kirti M. Doongursee College" },
+  hasCredential: { "@type": "EducationalOccupationalCredential", name: "Google UX Design Professional Certificate" },
+  knowsAbout: ["Product design", "UI/UX design", "Design systems", "Figma variables", "CRM", "Logistics", "B2B SaaS"],
+  sameAs: [profile.links.linkedin],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -121,10 +102,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       className={`${barlowCondensed.variable} ${barlowSemi.variable} ${barlow.variable}`}
+      data-theme="dark"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
-        {/* Applies a saved theme before first paint, so there is no flash. */}
+        {/* Applies the saved theme (dark by default) before first paint, so there is no flash. */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
@@ -133,8 +116,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <a
-          href="#about"
-          className="sr-only z-[80] rounded-lg bg-accent px-4 py-2 text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+          href="#main"
+          className="sr-only z-[80] rounded-lg bg-accent px-4 py-2 font-semibold text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
         >
           Skip to content
         </a>
