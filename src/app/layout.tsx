@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   keywords: [...siteKeywords],
   category: "technology",
   alternates: { canonical: siteUrl },
+  icons: {
+    icon: [{ url: "/favicon.png", type: "image/png", sizes: "96x96" }],
+  },
   openGraph: {
     type: "profile",
     url: siteUrl,
