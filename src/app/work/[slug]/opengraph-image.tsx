@@ -1,7 +1,7 @@
 import { caseStudies, getCaseStudy } from "@/data/projects";
 import { ogImage, ogSize } from "@/lib/og";
 
-export const alt = "Case study";
+export const alt = "Case study by Abhay Maske, product designer";
 export const size = ogSize;
 export const contentType = "image/png";
 

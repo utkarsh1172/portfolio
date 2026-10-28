@@ -354,6 +354,31 @@
   animation-delay: var(--d, 0s);
 }
 
+/* Transform only, for LCP candidates: they count as painted from the first frame. */
+@keyframes hero-rise {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@utility hero-rise {
+  animation: hero-rise 0.3s ease-out both;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@utility fade-in {
+  animation: fade-in 0.18s ease-out both;
+}
+
 /* Arrow icons inside buttons nudge toward where the link goes. */
 @utility nudge-r {
   transition: transform 0.2s ease;

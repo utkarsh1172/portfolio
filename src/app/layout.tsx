@@ -16,12 +16,11 @@ const geist = localFont({
   display: "swap",
   fallback: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "Arial", "sans-serif"],
 });
-// Only the italic is used, for a few accent words, so it isn't preloaded.
+// Only the italic is used, for accent words, including the headline.
 const instrumentSerif = localFont({
   src: [{ path: "../fonts/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" }],
   variable: "--font-instrument-serif",
   display: "swap",
-  preload: false,
   adjustFontFallback: "Times New Roman",
   fallback: ["Iowan Old Style", "Palatino Linotype", "Georgia", "serif"],
 });

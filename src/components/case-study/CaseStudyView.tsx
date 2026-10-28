@@ -125,10 +125,10 @@ export function CaseStudyView({ study }: { study: CaseStudy }) {
           <ArrowLeft size={16} aria-hidden /> All work
         </Link>
         <p className="eyebrow mt-6 hero-fade">Case study · {study.company}</p>
-        <h1 id="case-title" className="display mt-4 hero-fade text-[clamp(2.75rem,8vw,6rem)]">
+        <h1 id="case-title" className="display mt-4 hero-rise text-[clamp(2.75rem,8vw,6rem)]">
           {study.title}
         </h1>
-        <p className="lede mt-6 max-w-[56ch]! hero-fade text-[clamp(1.125rem,1.6vw,1.3125rem)]">{study.summary}</p>
+        <p className="lede mt-6 max-w-[56ch]! hero-rise text-[clamp(1.125rem,1.6vw,1.3125rem)]">{study.summary}</p>
         <ul className="mt-6 flex hero-fade flex-wrap gap-2" aria-label="Topics">
           {study.tags.map((t) => (
             <li key={t}>

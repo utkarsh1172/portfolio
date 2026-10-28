@@ -7,7 +7,11 @@ import { yearsSince } from "@/lib/experience";
 
 const delay = (d: number) => ({ "--d": `${d}s` }) as CSSProperties;
 
-/** The headline renders from server HTML with a CSS-only entrance, so it never waits for JavaScript. */
+/**
+ * The headline renders from server HTML with a CSS-only entrance, so it never
+ * waits for JavaScript. Headline and lede move but never fade (opacity would
+ * delay Largest Contentful Paint); smaller pieces fade in around them.
+ */
 export function HeroSection() {
   const years = yearsSince(CAREER_START);
   const current = experience.find((r) => r.current);
@@ -30,11 +34,11 @@ export function HeroSection() {
         </p>
 
         <h1 id="hero-heading" className="mt-8">
-          <span className="block hero-fade text-lg font-medium text-muted" style={delay(0.05)}>
+          <span className="block hero-rise text-lg font-medium text-muted" style={delay(0.05)}>
             {profile.name}
           </span>
           {/* Each role stays on one line (stacked on phones), so a wrap only ever falls at the separator. */}
-          <span className="display mt-3 block hero-fade text-[clamp(2.25rem,6.6vw,5.25rem)]" style={delay(0.1)}>
+          <span className="display mt-3 block hero-rise text-[clamp(2.25rem,6.6vw,5.25rem)]" style={delay(0.1)}>
             <span className="block whitespace-nowrap sm:inline">
               Product Designer
               <span className="hidden text-muted sm:inline" aria-hidden>
@@ -47,7 +51,7 @@ export function HeroSection() {
           </span>
         </h1>
 
-        <p className="lede mt-7 max-w-[46ch]! hero-fade text-[clamp(1.125rem,1.7vw,1.375rem)]" style={delay(0.18)}>
+        <p className="lede mt-7 max-w-[46ch]! hero-rise text-[clamp(1.125rem,1.7vw,1.375rem)]" style={delay(0.18)}>
           {profile.pitch}
         </p>
 

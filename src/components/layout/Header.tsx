@@ -1,9 +1,8 @@
 "use client";
 
 import { Menu } from "lucide-react";
-import { AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { navigation } from "@/data/navigation";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
 import { cn } from "@/lib/cn";
@@ -38,18 +37,25 @@ export function Header({ name }: { name: string }) {
     setOpen(false);
   }, []);
 
+  useEffect(() => {
+    if (open || !restoreFocus.current) return;
+    restoreFocus.current = false;
+    menuButtonRef.current?.focus();
+  }, [open]);
+
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 px-3 pt-[calc(env(safe-area-inset-top,0px)+0.75rem)] sm:px-6">
         <div className="glass glass-bar mx-auto flex h-14 max-w-page items-center gap-3 rounded-2xl pr-1.5 pl-2.5 sm:pl-3">
-          <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-xl" aria-label={`${name}, home`}>
+          {/* Named by its text, not aria-label, so the accessible name always contains what's visible. */}
+          <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-xl">
             <span
               className="grid h-9 w-9 place-items-center rounded-xl bg-accent text-[0.8125rem] font-semibold tracking-wide text-accent-ink"
               aria-hidden
             >
               {initials}
             </span>
-            <span className="hidden text-[0.9375rem] font-semibold sm:block">{name}</span>
+            <span className="sr-only text-[0.9375rem] font-semibold sm:not-sr-only">{name}</span>
           </Link>
 
           <nav aria-label="Main" className="mx-auto hidden lg:block">
@@ -97,13 +103,7 @@ export function Header({ name }: { name: string }) {
         </div>
       </header>
 
-      <AnimatePresence
-        onExitComplete={() => {
-          if (restoreFocus.current) menuButtonRef.current?.focus();
-        }}
-      >
-        {open && <MobileMenu active={active} onClose={close} onNavigate={navigate} />}
-      </AnimatePresence>
+      {open && <MobileMenu active={active} onClose={close} onNavigate={navigate} />}
     </>
   );
 }
