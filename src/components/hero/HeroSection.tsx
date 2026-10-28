@@ -33,14 +33,17 @@ export function HeroSection() {
           <span className="block hero-fade text-lg font-medium text-muted" style={delay(0.05)}>
             {profile.name}
           </span>
-          <span className="display mt-3 block hero-fade text-[clamp(2.6rem,7.4vw,5.75rem)]" style={delay(0.1)}>
-            Product Designer
-            <span className="text-muted" aria-hidden>
-              {" "}
-              |{" "}
-            </span>
-            <span className="sr-only"> and </span>
-            <span className="serif-accent">UI/UX Designer</span>
+          {/* Each role stays on one line (stacked on phones), so a wrap only ever falls at the separator. */}
+          <span className="display mt-3 block hero-fade text-[clamp(2.25rem,6.6vw,5.25rem)]" style={delay(0.1)}>
+            <span className="block whitespace-nowrap sm:inline">
+              Product Designer
+              <span className="hidden text-muted sm:inline" aria-hidden>
+                {" "}
+                |
+              </span>
+            </span>{" "}
+            <span className="sr-only">and </span>
+            <span className="serif-accent block whitespace-nowrap sm:inline">UI/UX Designer</span>
           </span>
         </h1>
 
@@ -69,11 +72,11 @@ export function HeroSection() {
         </div>
 
         <dl
-          className="mt-14 grid hero-fade gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3"
+          className="glass mt-14 grid hero-fade divide-y divide-line/70 rounded-2xl sm:grid-cols-3 sm:divide-x sm:divide-y-0"
           style={delay(0.34)}
         >
           {facts.map(([k, v]) => (
-            <div key={k} className="bg-bg/92 px-5 py-4">
+            <div key={k} className="px-5 py-4 sm:px-6 sm:py-5">
               <dt className="eyebrow">{k}</dt>
               <dd className="mt-1.5 font-medium">{v}</dd>
             </div>

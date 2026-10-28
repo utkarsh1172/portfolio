@@ -1,19 +1,38 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Colours are RGB channels so Tailwind utilities can apply
- * opacity (bg-accent/10). Dark is the default; [data-theme="light"] overrides.
+ * Design tokens. Colours are RGB channels so Tailwind can apply opacity
+ * (bg-accent/10) and scripts/contrast.mjs can check every text pairing,
+ * including text on glass over the brightest point of the background.
+ * Dark is the default; [data-theme="light"] overrides.
  */
 :root {
-  --bg: 10 22 38;
-  --bg-2: 13 28 47;
-  --surface: 17 34 57;
-  --surface-2: 22 43 71;
-  --line: 36 62 94;
-  --ink: 232 238 246;
-  --muted: 147 166 190;
-  --accent: 255 112 51;
-  --accent-ink: 10 22 38;
+  --bg: 10 11 15;
+  --bg-2: 16 18 24;
+  --surface: 20 22 29;
+  --surface-2: 28 31 40;
+  --line: 44 47 58;
+  --ink: 237 239 244;
+  --muted: 161 166 181;
+  --accent: 142 155 255;
+  --accent-ink: 10 11 15;
+
+  /* Glass. The tinted fill caps how bright the backdrop can get under text. */
+  --glass-tint: 16 18 24;
+  --glass-tint-alpha: 0.55;
+  --glass-sheen-alpha: 0.06;
+  --glass-border: 255 255 255;
+  --glass-border-alpha: 0.1;
+  --glass-highlight-alpha: 0.08;
+  --glass-shadow: 0 1px 1px rgb(0 0 0 / 0.3), 0 18px 48px -18px rgb(0 0 0 / 0.75);
+  --glass-blur: 20px;
+
+  /* Background light: two slow blooms in the accent family, plus grain. */
+  --bloom-1: 108 122 255;
+  --bloom-2: 150 92 255;
+  --bloom-alpha: 0.32;
+  --grain-opacity: 0.06;
+
   color-scheme: dark;
 
   /* Keep content clear of translucent phone system bars (zero on desktop). */
@@ -23,16 +42,37 @@
 }
 
 :root[data-theme="light"] {
-  --bg: 236 241 246;
-  --bg-2: 226 233 241;
+  --bg: 246 247 250;
+  --bg-2: 238 240 245;
   --surface: 255 255 255;
-  --surface-2: 241 245 249;
-  --line: 196 208 222;
-  --ink: 13 27 44;
-  --muted: 74 94 118;
-  --accent: 214 77 18;
+  --surface-2: 243 244 248;
+  --line: 222 225 233;
+  --ink: 15 17 26;
+  --muted: 80 86 104;
+  --accent: 64 76 220;
   --accent-ink: 255 255 255;
+
+  --glass-tint: 255 255 255;
+  --glass-tint-alpha: 0.62;
+  --glass-sheen-alpha: 0.2;
+  --glass-border: 15 17 26;
+  --glass-border-alpha: 0.08;
+  --glass-highlight-alpha: 0.9;
+  --glass-shadow: 0 1px 2px rgb(15 17 26 / 0.04), 0 18px 40px -20px rgb(15 17 26 / 0.2);
+
+  --bloom-1: 64 76 220;
+  --bloom-2: 150 92 255;
+  --bloom-alpha: 0.16;
+  --grain-opacity: 0.04;
+
   color-scheme: light;
+}
+
+/* Phones: lighter blur (backdrop-filter is expensive on low-end GPUs). */
+@media (max-width: 767px) {
+  :root {
+    --glass-blur: 12px;
+  }
 }
 
 /* Expose tokens as Tailwind utilities: bg-surface, text-muted, border-line/60 ... */
@@ -47,8 +87,12 @@
   --color-accent: rgb(var(--accent));
   --color-accent-ink: rgb(var(--accent-ink));
 
-  --font-sans: var(--font-barlow), "Barlow", system-ui, sans-serif;
-  --font-display: var(--font-barlow-condensed), "Barlow Condensed", "Arial Narrow", sans-serif;
+  /* Geist for everything; Instrument Serif italic as a sparing accent. */
+  --font-sans:
+    var(--font-geist), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  --font-serif:
+    var(--font-instrument-serif), "Instrument Serif", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   --container-page: 76rem;
 }
@@ -68,7 +112,33 @@
     line-height: 1.6;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  /* Background light. Fixed layers behind all content; transform-only animation. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -20vmax;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(38vmax 32vmax at 80% 22%, rgb(var(--bloom-1) / var(--bloom-alpha)), transparent 70%),
+      radial-gradient(34vmax 30vmax at 14% 70%, rgb(var(--bloom-2) / calc(var(--bloom-alpha) * 0.7)), transparent 70%),
+      radial-gradient(26vmax 22vmax at 60% 104%, rgb(var(--bloom-1) / calc(var(--bloom-alpha) * 0.5)), transparent 70%);
+    animation: drift 60s ease-in-out infinite alternate;
+  }
+
+  /* Grain, so the glass has texture to refract. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px;
   }
 
   /* Tailwind v4 resets buttons to the default cursor; restore the pointer. */
@@ -85,79 +155,193 @@
   :focus-visible {
     outline: 2px solid rgb(var(--accent));
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 6px;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-4vmax, 3vmax, 0) scale(1.06);
   }
 }
 
 @layer components {
+  /* Type. One family; tight tracking at display sizes. */
   .display {
-    font-family: var(--font-display);
-    font-weight: 700;
-    line-height: 0.95;
-    letter-spacing: -0.012em;
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
   }
 
   .serif-accent {
+    font-family: var(--font-serif);
     font-style: italic;
-  }
-
-  .h-section {
-    font-family: var(--font-display);
-    font-weight: 650;
-    font-size: clamp(2.25rem, 4.6vw, 3.75rem);
-    line-height: 0.98;
+    font-weight: 400;
+    font-size: 1.06em;
     letter-spacing: -0.01em;
   }
 
+  .h-section {
+    font-weight: 600;
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+  }
+
   .lede {
-    font-size: clamp(1.0625rem, 1.4vw, 1.1875rem);
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
     line-height: 1.6;
     color: rgb(var(--muted));
-    max-width: 62ch;
+    max-width: 60ch;
   }
 
   .eyebrow {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgb(var(--muted));
   }
 
-  /* Surfaces. Phase 3 turns .glass into frosted glass; until then both are solid. */
-  .glass,
+  /*
+   * Glass: for navigation, cards and meta panels. Long-form reading text sits
+   * on .solid instead.
+   */
+  .glass {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / var(--glass-sheen-alpha)), rgb(255 255 255 / 0)),
+      rgb(var(--glass-tint) / var(--glass-tint-alpha));
+    border: 1px solid rgb(var(--glass-border) / var(--glass-border-alpha));
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / var(--glass-highlight-alpha)),
+      var(--glass-shadow);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  }
+
+  /* The navigation bar floats over content, so it carries a denser fill. */
+  .glass-bar {
+    --glass-tint-alpha: 0.72;
+  }
+
   .solid {
     background: rgb(var(--surface));
     border: 1px solid rgb(var(--line));
+    box-shadow: var(--glass-shadow);
   }
 
   .menu-panel {
-    background: rgb(var(--bg));
+    background: rgb(var(--bg) / 0.94);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
   }
 
+  /* Case-card preview: a faint grid and an accent glow behind the flow. */
   .thumb {
-    background: rgb(var(--bg-2));
-    border: 1px solid rgb(var(--line));
+    border: 1px solid rgb(var(--glass-border) / var(--glass-border-alpha));
+    background:
+      radial-gradient(70% 80% at 85% 10%, rgb(var(--accent) / 0.2), transparent 70%),
+      linear-gradient(rgb(var(--glass-border) / 0.05) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, rgb(var(--glass-border) / 0.05) 1px, transparent 1px) 0 0 / 24px 24px,
+      rgb(var(--bg-2) / 0.6);
   }
 
+  /* Long-form case-study text: comfortable line length. */
+  .prose-case p {
+    max-width: 68ch;
+  }
+
+  /* Hover lift for cards; quick and small. */
   .lift {
     transition:
-      transform 0.2s ease,
-      border-color 0.2s ease;
+      opacity 0.3s ease-out,
+      transform 0.22s cubic-bezier(0.2, 0.7, 0.1, 1),
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
   .lift:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    border-color: rgb(var(--glass-border) / calc(var(--glass-border-alpha) * 2));
+  }
+  .lift:has(a:focus-visible) {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 4px;
+  }
+
+  /* Cursor-following sheen (position set by Effects); fine pointers only. */
+  .sheen {
+    position: relative;
+  }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      26rem circle at var(--mx, 50%) var(--my, 0%),
+      rgb(var(--accent) / 0.1),
+      transparent 60%
+    );
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .sheen:hover::after {
+      opacity: 1;
+    }
+  }
+
+  /* Scroll reveal. Hidden only once Effects has run, so content never depends on JavaScript. */
+  [data-reveal] {
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.3s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  .reveal-ready [data-reveal]:not(.is-in) {
+    opacity: 0;
+    transform: translateY(12px);
   }
 }
 
-/*
- * Entrance for above-the-fold content. Pure CSS so the headline (the LCP
- * element) paints without waiting for JavaScript. Stagger via --d.
- */
+/* Phones: blur only the navigation bar; other glass becomes a denser translucent fill. */
+@media (max-width: 767px) {
+  .glass:not(.glass-bar) {
+    --glass-tint-alpha: 0.82;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* No backdrop-filter support: solid surfaces. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .menu-panel {
+    background: rgb(var(--surface));
+  }
+}
+
+/* Reduced transparency: solid surfaces, no background light. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .menu-panel {
+    background: rgb(var(--surface));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  body::before {
+    display: none;
+  }
+}
+
+/* Entrance for above-the-fold content: CSS only, so the headline never waits for JavaScript. */
 @keyframes hero-fade {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -166,7 +350,7 @@
 }
 
 @utility hero-fade {
-  animation: hero-fade 0.5s ease-out both;
+  animation: hero-fade 0.3s ease-out both;
   animation-delay: var(--d, 0s);
 }
 
@@ -188,12 +372,15 @@
 }
 
 /*
- * Reduced motion. !important is deliberate here: it must override every
- * animation and transition declared anywhere, including inline styles.
+ * Reduced motion: no background light, no movement. !important is deliberate:
+ * it must override every animation and transition, including inline styles.
  */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  body::before {
+    display: none;
   }
   *,
   *::before,
@@ -202,5 +389,9 @@
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+  .lift:hover,
+  .reveal-ready [data-reveal]:not(.is-in) {
+    transform: none;
   }
 }

@@ -1,42 +1,29 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
+import { Effects } from "@/components/layout/Effects";
 import { experience } from "@/data/experience";
 import { profile } from "@/data/profile";
 import { themeInitScript } from "@/lib/theme";
 import { siteDescription, siteUrl } from "@/lib/site";
 import "./globals.css";
 
-// Barlow superfamily, self-hosted (SIL Open Font License): condensed for display,
-// semi-condensed for UI labels, regular for body text.
-const barlowCondensed = localFont({
-  src: [
-    { path: "../fonts/barlow-condensed-latin-600-normal.woff2", weight: "600" },
-    { path: "../fonts/barlow-condensed-latin-700-normal.woff2", weight: "700" },
-  ],
-  variable: "--font-barlow-condensed",
+// Self-hosted (SIL Open Font License, see src/fonts/OFL-*.txt). next/font sizes the
+// fallback fonts to match, so swapping in the web font causes no layout shift.
+const geist = localFont({
+  src: [{ path: "../fonts/geist-latin-wght-normal.woff2", weight: "100 900", style: "normal" }],
+  variable: "--font-geist",
   display: "swap",
-  fallback: ["Arial Narrow", "sans-serif"],
+  fallback: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "Arial", "sans-serif"],
 });
-const barlowSemi = localFont({
-  src: [
-    { path: "../fonts/barlow-semi-condensed-latin-500-normal.woff2", weight: "500" },
-    { path: "../fonts/barlow-semi-condensed-latin-600-normal.woff2", weight: "600" },
-    { path: "../fonts/barlow-semi-condensed-latin-700-normal.woff2", weight: "700" },
-  ],
-  variable: "--font-barlow-semi",
+// Only the italic is used, for a few accent words, so it isn't preloaded.
+const instrumentSerif = localFont({
+  src: [{ path: "../fonts/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" }],
+  variable: "--font-instrument-serif",
   display: "swap",
-  fallback: ["Arial Narrow", "sans-serif"],
-});
-const barlow = localFont({
-  src: [
-    { path: "../fonts/barlow-latin-400-normal.woff2", weight: "400" },
-    { path: "../fonts/barlow-latin-500-normal.woff2", weight: "500" },
-    { path: "../fonts/barlow-latin-600-normal.woff2", weight: "600" },
-  ],
-  variable: "--font-barlow",
-  display: "swap",
-  fallback: ["system-ui", "sans-serif"],
+  preload: false,
+  adjustFontFallback: "Times New Roman",
+  fallback: ["Iowan Old Style", "Palatino Linotype", "Georgia", "serif"],
 });
 
 const title = `${profile.name}, ${profile.role}`;
@@ -101,7 +88,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${barlowCondensed.variable} ${barlowSemi.variable} ${barlow.variable}`}
+      className={`${geist.variable} ${instrumentSerif.variable}`}
       data-theme="dark"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
@@ -117,11 +104,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <a
           href="#main"
-          className="sr-only z-[80] rounded-lg bg-accent px-4 py-2 font-semibold text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+          className="sr-only z-80 rounded-lg bg-accent px-4 py-2 font-semibold text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
         >
           Skip to content
         </a>
         {children}
+        <Effects />
       </body>
     </html>
   );

@@ -52,7 +52,7 @@ export function MobileMenu({ active, onClose, onNavigate }: MobileMenuProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Menu"
-      className="menu-panel fixed inset-0 z-[70] pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] lg:hidden"
+      className="menu-panel fixed inset-0 z-70 pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] lg:hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

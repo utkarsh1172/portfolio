@@ -123,37 +123,40 @@ function Layers({ layers }: { layers: { title: string; note?: string; items: str
   );
 }
 
-/** A type ladder: each style set at its real size, with its name and specs. */
+/**
+ * A type ladder: each style set at its real size (capped on narrow screens),
+ * with its name and specs. Specs sit above the sample on phones.
+ */
 function Scale({ rows }: { rows: { name: string; size: number; weight: number; note?: string }[] }) {
   return (
-    <table className="w-full table-fixed border-collapse text-left">
-      <thead className="sr-only">
-        <tr>
-          <th scope="col">Style</th>
-          <th scope="col">Sample</th>
-          <th scope="col">Size and weight</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-line">
-        {rows.map((r) => (
-          <tr key={r.name}>
-            <th scope="row" className="w-26 py-2.5 pr-3 align-middle text-[0.8125rem] font-medium text-muted sm:w-32">
+    <ol className="divide-y divide-line">
+      {rows.map((r) => (
+        <li key={r.name} className="grid gap-1 py-3 sm:grid-cols-[8rem_1fr_5.5rem] sm:items-center sm:gap-3">
+          <span className="flex justify-between text-[0.8125rem] font-medium text-muted sm:block">
+            <span>
               {r.name}
               {r.note && <span className="ml-1.5 text-accent">{r.note}</span>}
-            </th>
-            <td
-              className="truncate py-2.5 pr-3 align-middle leading-tight"
-              style={{ fontSize: r.size, fontWeight: r.weight }}
-            >
-              Orders in transit
-            </td>
-            <td className="w-22 py-2.5 text-right align-middle text-[0.8125rem] text-muted tabular-nums">
+            </span>
+            <span className="tabular-nums sm:hidden" aria-hidden>
               {r.size} / {r.weight}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+            </span>
+          </span>
+          <span
+            className="truncate leading-tight"
+            style={{ fontSize: `min(${r.size}px, 12vw)`, fontWeight: r.weight }}
+            aria-hidden
+          >
+            In transit
+          </span>
+          <span className="sr-only">
+            {r.size} pixels, weight {r.weight}
+          </span>
+          <span className="hidden text-right text-[0.8125rem] text-muted tabular-nums sm:block" aria-hidden>
+            {r.size} / {r.weight}
+          </span>
+        </li>
+      ))}
+    </ol>
   );
 }
 
