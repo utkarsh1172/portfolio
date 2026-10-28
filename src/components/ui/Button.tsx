@@ -7,7 +7,7 @@ const base =
   "group inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-semi text-[0.98rem] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "px-5 bg-accent text-accent-ink hover:brightness-110 active:brightness-95",
+  primary: "accent-gradient px-5 text-accent-ink hover:brightness-110 active:brightness-95",
   ghost: "px-5 border border-line text-ink hover:border-ink/40 hover:bg-surface-2",
   quiet: "px-5 text-muted hover:bg-surface-2 hover:text-ink",
   /** Text link with button sizing, for secondary destinations in a row of buttons. */

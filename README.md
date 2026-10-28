@@ -36,6 +36,7 @@ Copy `.env.example` to `.env.local`. All variables are validated with Zod.
 | Variable               | Required           | Purpose                                                                           |
 | ---------------------- | ------------------ | --------------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_SITE_URL` | Yes, in production | Canonical URL, sitemap, robots.txt, Open Graph tags. A bad value fails the build. |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | No | Google Search Console HTML-tag verification token. |
 | `RESEND_API_KEY`       | No                 | Enables email delivery for the contact form through [Resend](https://resend.com). |
 | `CONTACT_FROM_EMAIL`   | With Resend        | Sender, on a domain verified in Resend, e.g. `Portfolio <hi@your-domain.com>`.    |
 | `CONTACT_TO_EMAIL`     | No                 | Where messages go. Defaults to the email in `src/data/profile.ts`.                |
@@ -57,6 +58,23 @@ takes effect on the next deploy.
    and redeploy.
 
 The home page is statically prerendered and revalidated daily, so "years of experience" updates itself.
+
+## Google Search setup
+
+The site emits a canonical URL, crawl directives, Open Graph metadata, a generated `/robots.txt`, a generated
+`/sitemap.xml`, and JSON-LD describing the site as Utkarsh's profile page. After deploying SEO changes:
+
+1. Keep one permanent production URL. A short custom domain is preferable; set that exact HTTPS URL in
+   `NEXT_PUBLIC_SITE_URL` and redeploy so the canonical, sitemap and structured data all agree.
+2. Add the production site to Google Search Console. Choose HTML-tag verification, copy only the token inside
+   the tag's `content` attribute into `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, and redeploy before verifying.
+3. Submit `https://your-domain.com/sitemap.xml` in Search Console.
+4. Inspect the home-page URL and request indexing. Repeat this only after meaningful content changes.
+5. Link to the portfolio from LinkedIn and GitHub using the same name, role and production URL. These external
+   identity signals help Google distinguish this Utkarsh Kamble from people with the same name.
+
+Search ranking is not guaranteed by metadata alone. Keep the portfolio public, fast and current, and earn
+relevant links to it rather than using repetitive keywords or artificial backlink schemes.
 
 ## Architecture
 

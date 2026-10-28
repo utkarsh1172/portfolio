@@ -7,38 +7,44 @@
  * @theme mapping below) and canvas code (Globe reads them at runtime) share
  * one source of truth.
  *
- * Dark is the default: a near-black base, off-white ink and one accent,
- * shipping-container orange. Teal and amber are kept only for the globe and
- * the order desk, where they tell categories apart.
+ * Dark is the default: the reference site's near-black base, off-white ink,
+ * translucent surfaces and violet-to-cyan accent system. Teal and amber are
+ * retained only where the globe and order desk need distinct status colours;
+ * both come from the same reference palette.
  */
 :root {
-  --bg: 11 11 15;
-  --bg-2: 16 16 21;
-  --surface: 21 21 27;
-  --surface-2: 29 29 36;
-  --line: 46 46 56;
-  --ink: 236 236 240;
-  --muted: 156 156 168;
-  --accent: 255 112 51;
-  --accent-ink: 11 11 15;
-  --teal: 52 199 183;
-  --amber: 244 186 72;
-  --globe-dot: 92 92 108;
-  --globe-sea: 19 19 25;
+  --bg: 7 7 12;
+  --bg-2: 13 13 22;
+  --surface: 16 16 21;
+  --surface-2: 20 20 26;
+  /* Composite of the reference's #ffffff14 border over #07070c. */
+  --line: 27 27 32;
+  --ink: 232 232 240;
+  --muted: 154 154 176;
+  --accent: 141 84 255;
+  --accent-2: 0 183 215;
+  --accent-soft: 167 139 250;
+  --accent-blue: 96 165 250;
+  --accent-cyan: 34 211 238;
+  --accent-ink: 255 255 255;
+  --teal: 0 210 148;
+  --amber: 252 187 0;
+  --globe-dot: 154 154 176;
+  --globe-sea: 13 13 22;
   /* Waybill card: a printed label sitting on the page. */
-  --paper: 236 236 240;
-  --paper-ink: 11 11 15;
-  --paper-muted: 78 78 90;
-  --paper-line: 200 200 210;
+  --paper: 232 232 240;
+  --paper-ink: 7 7 12;
+  --paper-muted: 78 78 96;
+  --paper-line: 196 196 208;
   /* Glass: a faint fill, a hairline edge and light catching the top edge. */
   --glass: 255 255 255;
   --glass-alpha: 0.035;
   --glass-edge: 255 255 255;
-  --glass-edge-alpha: 0.09;
-  --glass-highlight: 0.1;
+  --glass-edge-alpha: 0.08;
+  --glass-highlight: 0.05;
   --sheen: 255 255 255;
   --sheen-alpha: 0.05;
-  --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 16px 32px -20px rgb(0 0 0 / 0.6);
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.025), 0 18px 40px -28px rgb(var(--accent) / 0.28);
   color-scheme: dark;
 
   /* Keep content clear of translucent phone system bars (zero on desktop). */
@@ -49,32 +55,33 @@
 
 /* Light theme, behind the toggle. */
 :root[data-theme="light"] {
-  --bg: 236 241 246;
-  --bg-2: 226 233 241;
+  --bg: 232 232 240;
+  --bg-2: 255 255 255;
   --surface: 255 255 255;
-  --surface-2: 241 245 249;
-  --line: 196 208 222;
-  --ink: 13 27 44;
-  --muted: 74 94 118;
-  /* Deeper than the dark-theme orange so text and white-on-orange buttons meet WCAG AA. */
-  --accent: 178 60 10;
+  --surface-2: 221 214 255;
+  --line: 196 196 208;
+  --ink: 7 7 12;
+  --muted: 78 78 96;
+  /* Reference-palette shades dark enough for controls on the light canvas. */
+  --accent: 127 34 254;
+  --accent-2: 0 132 204;
   --accent-ink: 255 255 255;
-  --teal: 10 112 101;
+  --teal: 0 128 98;
   --amber: 138 86 0;
-  --globe-dot: 120 140 165;
-  --globe-sea: 214 224 236;
+  --globe-dot: 78 78 96;
+  --globe-sea: 221 214 255;
   --paper: 255 255 255;
-  --paper-ink: 13 27 44;
-  --paper-muted: 84 102 126;
-  --paper-line: 205 215 228;
+  --paper-ink: 7 7 12;
+  --paper-muted: 78 78 96;
+  --paper-line: 196 196 208;
   --glass: 255 255 255;
   --glass-alpha: 0.62;
-  --glass-edge: 13 27 44;
+  --glass-edge: 7 7 12;
   --glass-edge-alpha: 0.09;
   --glass-highlight: 0.85;
   --sheen: 255 255 255;
   --sheen-alpha: 0.6;
-  --shadow: 0 1px 0 rgb(13 27 44 / 0.04), 0 16px 32px -20px rgb(13 27 44 / 0.2);
+  --shadow: 0 1px 0 rgb(7 7 12 / 0.04), 0 16px 32px -20px rgb(127 34 254 / 0.2);
   color-scheme: light;
 }
 
@@ -88,6 +95,7 @@
   --color-ink: rgb(var(--ink));
   --color-muted: rgb(var(--muted));
   --color-accent: rgb(var(--accent));
+  --color-accent-2: rgb(var(--accent-2));
   --color-accent-ink: rgb(var(--accent-ink));
   --color-teal: rgb(var(--teal));
   --color-amber: rgb(var(--amber));
@@ -204,6 +212,25 @@
     line-height: 1.6;
     color: rgb(var(--muted));
     max-width: 62ch;
+  }
+
+  /* The reference uses violet-to-cyan for actions and a softer three-stop
+   * treatment for its main value proposition. */
+  .accent-gradient {
+    background-image: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent-2)));
+    box-shadow: 0 10px 24px -12px rgb(var(--accent) / 0.55);
+  }
+
+  .text-accent-gradient {
+    color: transparent;
+    background-image: linear-gradient(
+      110deg,
+      rgb(var(--accent-soft)) 0%,
+      rgb(var(--accent-blue)) 45%,
+      rgb(var(--accent-cyan)) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
   }
 
   .glass {
@@ -357,11 +384,13 @@
 
 /* Soft light behind the photo; --mx / --my are set by HeroLight on fine pointers. */
 @utility hero-sheen {
-  background: radial-gradient(
-    30rem circle at var(--mx, 72%) var(--my, 38%),
-    rgb(var(--sheen) / var(--sheen-alpha)),
-    transparent 62%
-  );
+  background:
+    radial-gradient(
+      30rem circle at var(--mx, 72%) var(--my, 38%),
+      rgb(var(--accent) / 0.2),
+      transparent 66%
+    ),
+    radial-gradient(28rem circle at 100% 34%, rgb(var(--accent-2) / 0.14), transparent 68%);
 }
 
 /* Arrow icons inside buttons nudge toward where the link goes. */

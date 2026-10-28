@@ -27,7 +27,7 @@ export const profile: Profile = {
   links: {
     github: "https://github.com/utkarsh1172",
     linkedin: "https://www.linkedin.com/in/utkarsh-kamble-a2a543217/",
-    site: "https://portfolio-utkarsh1172.netlify.app/",
+    site: "https://portfolio-utkarsh-kamble11.vercel.app/",
   },
   resume: { path: "/resume/Utkarsh_Kamble_Resume.pdf", fileName: "Utkarsh_Kamble_Resume.pdf" },
   photo: {

@@ -114,7 +114,7 @@ export function Header() {
             <a
               href="#contact"
               onClick={go("contact")}
-              className="hidden min-h-10 items-center rounded-full bg-accent px-4 font-semi text-[0.95rem] font-semibold text-accent-ink transition hover:brightness-110 md:inline-flex"
+              className="accent-gradient hidden min-h-10 items-center rounded-full px-4 font-semi text-[0.95rem] font-semibold text-accent-ink transition hover:brightness-110 md:inline-flex"
             >
               Get in touch
             </a>

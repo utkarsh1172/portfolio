@@ -47,7 +47,7 @@ export function HeroSection() {
           </h1>
 
           <p
-            className="relative z-20 mt-6 max-w-[18ch] hero-fade font-display text-[clamp(1.9rem,7.4vw,2.6rem)] leading-[1.02] font-semibold tracking-[-0.02em] lg:mt-8 lg:max-w-[24ch] lg:text-[clamp(2rem,2.9vw,2.75rem)]"
+            className="text-accent-gradient relative z-20 mt-6 max-w-[18ch] hero-fade font-display text-[clamp(1.9rem,7.4vw,2.6rem)] leading-[1.02] font-semibold tracking-[-0.02em] lg:mt-8 lg:max-w-[24ch] lg:text-[clamp(2rem,2.9vw,2.75rem)]"
             style={delay(0.08)}
           >
             I build the software between the order and the doorstep.
