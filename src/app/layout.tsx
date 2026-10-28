@@ -1,43 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { Inter, Manrope, Sora, Space_Grotesk } from "next/font/google";
 import type { ReactNode } from "react";
+import { Effects } from "@/components/layout/Effects";
 import { experience } from "@/data/experience";
 import { profile } from "@/data/profile";
 import { themeInitScript } from "@/lib/theme";
 import { siteDescription, siteUrl } from "@/lib/site";
 import "./globals.css";
 
-// Barlow superfamily, self-hosted (SIL Open Font License): condensed for display,
-// semi-condensed for UI labels, regular for body text.
-const barlowCondensed = localFont({
-  src: [
-    { path: "../fonts/barlow-condensed-latin-600-normal.woff2", weight: "600" },
-    { path: "../fonts/barlow-condensed-latin-700-normal.woff2", weight: "700" },
-  ],
-  variable: "--font-barlow-condensed",
-  display: "swap",
-  fallback: ["Arial Narrow", "sans-serif"],
-});
-const barlowSemi = localFont({
-  src: [
-    { path: "../fonts/barlow-semi-condensed-latin-500-normal.woff2", weight: "500" },
-    { path: "../fonts/barlow-semi-condensed-latin-600-normal.woff2", weight: "600" },
-    { path: "../fonts/barlow-semi-condensed-latin-700-normal.woff2", weight: "700" },
-  ],
-  variable: "--font-barlow-semi",
-  display: "swap",
-  fallback: ["Arial Narrow", "sans-serif"],
-});
-const barlow = localFont({
-  src: [
-    { path: "../fonts/barlow-latin-400-normal.woff2", weight: "400" },
-    { path: "../fonts/barlow-latin-500-normal.woff2", weight: "500" },
-    { path: "../fonts/barlow-latin-600-normal.woff2", weight: "600" },
-  ],
-  variable: "--font-barlow",
-  display: "swap",
-  fallback: ["system-ui", "sans-serif"],
-});
+// Google Fonts through next/font: downloaded at build time and served from this
+// site, so visitors never call Google and the fallback is sized to avoid layout shift.
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
+// Section headings sit below the fold, so Sora isn't preloaded.
+const sora = Sora({ subsets: ["latin"], variable: "--font-sora", display: "swap", preload: false });
 
 const title = `${profile.name}, Full-Stack Engineer for Logistics and E-commerce`;
 
@@ -80,10 +57,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a1626" },
-    { media: "(prefers-color-scheme: light)", color: "#ecf1f6" },
-  ],
+  themeColor: "#0b0b0f",
 };
 
 const current = experience.find((r) => r.current);
@@ -120,11 +94,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${barlowCondensed.variable} ${barlowSemi.variable} ${barlow.variable}`}
+      className={`${inter.variable} ${manrope.variable} ${spaceGrotesk.variable} ${sora.variable}`}
+      data-theme="dark"
       suppressHydrationWarning
     >
       <head>
-        {/* Applies a saved theme before first paint, so there is no flash. */}
+        {/* Applies the saved theme (dark by default) before first paint, so there is no flash. */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
@@ -139,6 +114,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to content
         </a>
         {children}
+        <Effects />
       </body>
     </html>
   );

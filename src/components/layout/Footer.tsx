@@ -1,4 +1,4 @@
-import { profile } from "@/data/profile";
+import { LAST_UPDATED, profile } from "@/data/profile";
 
 export function Footer() {
   const { github, linkedin } = profile.links;
@@ -6,7 +6,8 @@ export function Footer() {
     <footer className="border-t border-line">
       <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-4 px-5 py-8 text-sm text-muted sm:px-8">
         <p>
-          {profile.name}, {new Date().getFullYear()}. Built with Next.js, TypeScript, Tailwind CSS and Motion.
+          {profile.name}, {new Date().getFullYear()}. Built with Next.js, TypeScript, Tailwind CSS and Motion. Last
+          updated {LAST_UPDATED}.
         </p>
         <nav
           aria-label="Elsewhere"

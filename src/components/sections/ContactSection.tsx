@@ -13,7 +13,7 @@ export function ContactSection() {
     <Section id="contact" className="pb-16">
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <h2 id="contact-heading" className="display text-[clamp(3rem,7vw,5.6rem)] uppercase">
+          <h2 id="contact-heading" className="heading text-[clamp(2.25rem,5vw,3.75rem)]">
             Let&rsquo;s talk about the role.
           </h2>
           <p className="lede mt-6">{profile.seeking}</p>

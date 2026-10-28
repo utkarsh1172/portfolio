@@ -33,11 +33,11 @@ export function RoleList({ roles }: { roles: readonly Role[] }) {
                   {r.start} to {r.end}
                 </span>
                 <span className="sm:col-span-6">
-                  <span className="display block text-[1.9rem]">{r.title}</span>
+                  <span className="heading block text-[1.5rem]">{r.title}</span>
                   <span className="mt-1 block text-muted">{r.company}</span>
                 </span>
                 <span className="flex items-center justify-between gap-3 sm:col-span-3 sm:justify-end">
-                  {r.current ? <Badge tone="teal">Current role</Badge> : <Badge tone="muted">Completed</Badge>}
+                  {r.current ? <Badge tone="accent">Current role</Badge> : <Badge tone="muted">Completed</Badge>}
                   <ChevronDown
                     size={18}
                     aria-hidden

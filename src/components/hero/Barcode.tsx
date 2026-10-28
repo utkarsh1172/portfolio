@@ -16,7 +16,7 @@ export function Barcode({ value, className }: { value: string; className?: strin
   }
   return (
     <svg viewBox={`0 0 ${x} 24`} preserveAspectRatio="none" className={className} aria-hidden focusable="false">
-      <g className="bars-in" fill="currentColor">
+      <g fill="currentColor">
         {bars.map((b) => (
           <rect key={b.x} x={b.x} y={0} width={b.w} height={24} />
         ))}

@@ -9,6 +9,12 @@ import type { Profile } from "@/types";
 /** First professional role (Fxgetactive, Oct 2022). Years of experience derive from this. */
 export const CAREER_START = { year: 2022, month: 10 };
 
+/** Shown in About. */
+export const LEARNING = "Gen AI and system design, with my focus mostly on team management";
+
+/** Shown in the footer; update it when the content changes. */
+export const LAST_UPDATED = "Oct 2026";
+
 export const profile: Profile = {
   name: "Utkarsh Kamble",
   firstName: "Utkarsh",

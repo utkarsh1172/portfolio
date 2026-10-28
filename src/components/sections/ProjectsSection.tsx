@@ -100,7 +100,7 @@ export function ProjectsSection() {
                     <span className="mt-1 block text-sm text-muted">{shortCompany(c.company)}</span>
                     <span className="mt-2 flex flex-wrap gap-2">
                       <Badge tone="muted">{c.kind}</Badge>
-                      <Badge tone={c.status === "In production" ? "teal" : "amber"}>{c.status}</Badge>
+                      <Badge tone={c.status === "In production" ? "accent" : "muted"}>{c.status}</Badge>
                     </span>
                   </button>
                 </li>
@@ -127,7 +127,7 @@ export function ProjectsSection() {
             >
               <header className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <h3 id="case-title" className="display text-[2.4rem] sm:text-[3rem]">
+                  <h3 id="case-title" className="heading text-[2rem] sm:text-[2.5rem]">
                     {current.name}
                   </h3>
                   <p className="mt-2 text-muted">
@@ -193,8 +193,8 @@ function Overview({ study }: { study: CaseStudy }) {
       <div>
         <h4 className="font-semi text-sm font-semibold text-muted">The problem</h4>
         <p className="mt-2">{study.problem}</p>
-        <div className="mt-6 rounded-xl border-l-[3px] border-teal bg-teal/5 py-3 pr-3 pl-4">
-          <h4 className="font-semi text-sm font-semibold text-teal">Outcome</h4>
+        <div className="mt-6 rounded-card border-l-[3px] border-accent bg-accent/5 py-3 pr-3 pl-4">
+          <h4 className="font-semi text-sm font-semibold text-accent">Outcome</h4>
           <p className="mt-1 font-medium">{study.outcome}</p>
         </div>
       </div>
@@ -223,7 +223,7 @@ function StackView({ study }: { study: CaseStudy }) {
           {study.stack.map((s) => (
             <li
               key={s}
-              className="rounded-lg border border-line bg-bg-2 px-3 py-1.5 font-semi text-[0.95rem] font-semibold"
+              className="rounded-card border border-line bg-bg-2 px-3 py-1.5 font-semi text-[0.95rem] font-semibold"
             >
               {s}
             </li>

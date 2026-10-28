@@ -69,7 +69,7 @@ src/
 │   ├── loading.tsx, not-found.tsx, robots.ts, sitemap.ts, opengraph-image.tsx, icon.svg
 │   └── globals.css          Design tokens (CSS variables) + Tailwind v4 theme
 ├── components/
-│   ├── layout/              Header (route nav, scroll spy), MobileMenu, ThemeToggle, Footer
+│   ├── layout/              Header (route nav, scroll spy), MobileMenu, ThemeToggle, Footer, Effects
 │   ├── sections/            One file per page section, plus RoleList and ContactForm
 │   ├── visualizations/      Globe, OrderPipeline, FlowDiagram, OrderDesk + lazy wrappers
 │   ├── providers/           CaseSelectionProvider (cross-section "open this case study")
@@ -77,8 +77,7 @@ src/
 ├── data/                    All site content: profile, projects, experience, skills, navigation…
 ├── hooks/                   useScrollSpy, useInView, useTheme
 ├── lib/                     Pure logic: order simulation, contact schema, env, scroll, theme
-├── types/                   Shared content types
-└── fonts/                   Self-hosted Barlow (SIL Open Font License)
+└── types/                   Shared content types
 ```
 
 **Server and client boundaries.** Components are server components by default. Client components are
@@ -98,6 +97,7 @@ with injectable randomness and time, so it is unit-tested deterministically. The
 - **Metrics:** update a project's `outcome` in `src/data/projects.ts`.
 - **Resume:** replace `public/resume/Utkarsh_Kamble_Resume.docx` (keep the file name, or update `profile.resume`).
 - **Experience start date:** `CAREER_START` in `src/data/profile.ts`.
+- **"Learning now" and "Last updated":** `LEARNING` and `LAST_UPDATED` in `src/data/profile.ts`.
 
 ## Performance
 
@@ -105,9 +105,11 @@ with injectable randomness and time, so it is unit-tested deterministically. The
   never waits for JavaScript.
 - The globe (canvas, ~6 KB of code) and the order desk load after the critical path via `next/dynamic`, with
   same-size placeholders so nothing shifts.
-- Fonts are self-hosted through `next/font/local`: no third-party requests, no layout shift on swap.
+- Fonts (Inter, Space Grotesk, Sora, Manrope) come from Google Fonts through `next/font/google`, which downloads
+  them at build time and serves them from this site: no third-party requests, no layout shift on swap.
 - The contact schema uses `zod/mini` so validation adds only a few KB to the browser bundle.
-- Animation loops pause off screen and stop entirely under `prefers-reduced-motion`.
+- Nothing animates on its own: the globe moves only when dragged and the order desk runs only when started.
+- Glass (`backdrop-filter`) is limited to the header on phones, where it is most expensive.
 
 Measured locally against the previous Next.js 14 build (production servers, headless Chromium; mobile with
 4× CPU throttling). These are lab numbers, not field data:
@@ -141,8 +143,12 @@ checks at 320, 390, 820, 1024, 1440 and 2560 px. Those browser checks are not pa
 
 - **No GSAP or Three.js.** The design's motion is component transitions (Motion) and one canvas globe; neither
   needs a timeline library or WebGL. Adding them would cost bundle size without visible benefit.
-- **No scroll-reveal wrappers.** The design deliberately animates only the hero entrance and responses to
-  user actions. Section-by-section reveals would change the design.
+- **Restrained motion.** A 300 ms fade-up for the hero and for each section as it scrolls into view, and
+  200–300 ms hover transitions. Sections are only hidden once JavaScript is running, so content never depends
+  on it, and `prefers-reduced-motion` turns all of it off.
+- **Glass, understated.** The header and cards use a faint translucent fill, a hairline edge and a highlight
+  along the top edge, with solid fallbacks for browsers without `backdrop-filter` and for
+  `prefers-reduced-transparency`. One accent, one radius (`rounded-card`), one shadow (`shadow-card`).
 - **Tooling versions.** ESLint 9 rather than 10 and TypeScript 6 rather than 7, because Next.js's ESLint
   plugins and typescript-eslint do not support the newer majors yet. Node's built-in test runner instead of
   Vitest keeps the dependency tree small.

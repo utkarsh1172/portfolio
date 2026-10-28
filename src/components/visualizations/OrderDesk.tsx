@@ -25,9 +25,8 @@ const formatTime = (t: number) =>
 export default function OrderDesk() {
   const reduce = useReducedMotion();
   const reducer = useMemo(() => createReducer(), []);
-  const [state, dispatch] = useReducer(reducer, undefined, () =>
-    seedState(!window.matchMedia("(prefers-reduced-motion: reduce)").matches),
-  );
+  // Starts paused: the workers run only when the visitor presses the button.
+  const [state, dispatch] = useReducer(reducer, undefined, () => seedState(false));
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, "-80px");
 
@@ -44,7 +43,7 @@ export default function OrderDesk() {
   return (
     <Card ref={ref} className="overflow-hidden">
       <div className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3 sm:px-6">
-        <Badge tone="amber">Demo with simulated data</Badge>
+        <Badge tone="muted">Demo with simulated data</Badge>
         {/* Fixed width for the longest label, so the toolbar never reflows as the status changes. */}
         <span className="inline-block min-w-[10.5rem] text-sm whitespace-nowrap text-muted" aria-live="polite">
           {state.running ? (inView ? "Workers running" : "Paused while off screen") : "Paused"}

@@ -244,7 +244,7 @@ export function CommandPalette() {
         onClick={(e) => {
           if (e.target === e.currentTarget) e.currentTarget.close();
         }}
-        className="fixed inset-x-0 top-[12vh] mx-auto w-[min(36rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-line bg-surface p-0 text-ink shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)] backdrop:bg-[rgb(0_0_0/0.55)] backdrop:backdrop-blur-sm"
+        className="fixed inset-x-0 top-[12vh] mx-auto w-[min(36rem,calc(100vw-2rem))] overflow-hidden rounded-card border border-line bg-surface p-0 text-ink shadow-card backdrop:bg-[rgb(0_0_0/0.55)] backdrop:backdrop-blur-sm"
       >
         {open && (
           <div>

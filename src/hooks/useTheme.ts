@@ -2,23 +2,15 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import { THEME_STORAGE_KEY, type Theme } from "@/lib/theme";
-const darkQuery = () => window.matchMedia("(prefers-color-scheme: dark)");
-
 function subscribe(onChange: () => void) {
-  const mq = darkQuery();
   const mo = new MutationObserver(onChange);
   mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  mq.addEventListener("change", onChange);
-  return () => {
-    mo.disconnect();
-    mq.removeEventListener("change", onChange);
-  };
+  return () => mo.disconnect();
 }
 
+// Dark unless the visitor chose light.
 function getSnapshot(): Theme {
-  const explicit = document.documentElement.dataset.theme;
-  if (explicit === "light" || explicit === "dark") return explicit;
-  return darkQuery().matches ? "dark" : "light";
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
 }
 
 /**

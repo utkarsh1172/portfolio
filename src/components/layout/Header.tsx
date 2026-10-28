@@ -44,10 +44,7 @@ export function Header() {
 
   return (
     <>
-      <header
-        className="fixed inset-x-0 top-0 z-50 hero-fade border-b border-line/60 bg-bg/90 pt-[env(safe-area-inset-top,0px)] backdrop-blur-xl"
-        style={{ "--d": "0.7s" } as React.CSSProperties}
-      >
+      <header className="glass-bar fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)]">
         <div className="mx-auto flex h-16 max-w-page items-center gap-4 px-5 sm:px-8">
           <a
             href="#top"
@@ -58,7 +55,9 @@ export function Header() {
             <span className="grid h-9 w-9 place-items-center rounded-lg border-2 border-accent font-display text-lg leading-none font-bold text-accent transition group-hover:bg-accent group-hover:text-accent-ink">
               UK
             </span>
-            <span className="hidden font-semi text-[1.02rem] font-semibold sm:block">{profile.name}</span>
+            <span className="hidden font-display text-[1.05rem] font-semibold tracking-tight sm:block">
+              {profile.name}
+            </span>
           </a>
 
           <nav aria-label="Sections" className="relative mx-auto hidden flex-1 lg:block">
@@ -82,9 +81,6 @@ export function Header() {
                         className="group flex flex-col items-center gap-1.5 rounded-md px-1"
                       >
                         <span className="relative grid h-4 w-4 place-items-center">
-                          {current && (
-                            <span className="absolute inset-0 pulse-ring rounded-full bg-accent/50" aria-hidden />
-                          )}
                           <span
                             className={cn(
                               "h-3 w-3 rounded-full border-2 transition",
@@ -98,7 +94,7 @@ export function Header() {
                         </span>
                         <span
                           className={cn(
-                            "font-semi text-[0.82rem] font-semibold transition",
+                            "text-[0.84rem] font-medium transition",
                             current ? "text-ink" : "text-muted group-hover:text-ink",
                           )}
                         >

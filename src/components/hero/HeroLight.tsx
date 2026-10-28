@@ -39,5 +39,5 @@ export function HeroLight() {
     };
   }, []);
 
-  return <div ref={ref} className="pointer-events-none absolute inset-0 hero-fade hero-glow" aria-hidden />;
+  return <div ref={ref} className="pointer-events-none absolute inset-0 hero-sheen" aria-hidden />;
 }

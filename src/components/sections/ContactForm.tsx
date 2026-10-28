@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/cn";
 
 const fieldClass =
-  "mt-1.5 w-full rounded-xl border border-line bg-bg-2 px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none aria-[invalid=true]:border-accent";
+  "mt-1.5 w-full rounded-card border border-line bg-bg-2 px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none aria-[invalid=true]:border-accent";
 
 const empty: ContactInput = { name: "", email: "", company: "", message: "" };
 
@@ -59,7 +59,7 @@ export function ContactForm({ delivery }: { delivery: boolean }) {
   if (state.status === "sent") {
     return (
       <Card className="flex flex-col justify-center p-6 sm:p-8 lg:col-span-6" role="status">
-        <p className="display text-[2.2rem]">Message sent.</p>
+        <p className="heading text-[1.75rem]">Message sent.</p>
         <p className="mt-2 text-muted">Thanks for reaching out. I&rsquo;ll reply to the address you gave.</p>
       </Card>
     );

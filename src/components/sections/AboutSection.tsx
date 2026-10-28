@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
 import { GlobeLazy } from "@/components/visualizations/GlobeLazy";
-import { profile } from "@/data/profile";
+import { LEARNING, profile } from "@/data/profile";
 
 const strengths = [
   {
@@ -27,6 +27,7 @@ const facts: [string, string][] = [
   ["Now", `${profile.role}, Growve Retail and Management Services`],
   ["Before", "ACE International, Fxgetactive"],
   ["Focus", "Order automation, logistics, CRM and e-commerce"],
+  ["Learning now", LEARNING],
   ["Education", "Full Stack Development, Newton School; B.Com, Mumbai University"],
   ["Looking for", profile.seeking],
 ];
@@ -72,7 +73,7 @@ export function AboutSection() {
       <ul className="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
         {strengths.map((s) => (
           <li key={s.title} className="border-t-2 border-ink/80 pt-4">
-            <h3 className="font-semi text-[1.15rem] leading-snug font-semibold">{s.title}</h3>
+            <h3 className="heading text-[1.15rem] leading-snug">{s.title}</h3>
             <p className="mt-2 text-[0.98rem] text-muted">{s.text}</p>
           </li>
         ))}

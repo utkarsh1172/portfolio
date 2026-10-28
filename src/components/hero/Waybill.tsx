@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { Barcode } from "./Barcode";
 
@@ -9,8 +8,7 @@ interface Row {
 }
 
 /**
- * A shipping label for a person. Every value comes from the resume; the card
- * prints row by row as part of the hero's load sequence.
+ * A shipping label for a person. Every value comes from the resume.
  */
 export function Waybill({ years, className }: { years: number; className?: string }) {
   const rows: Row[] = [
@@ -25,7 +23,7 @@ export function Waybill({ years, className }: { years: number; className?: strin
     <aside
       aria-label="Profile at a glance"
       className={cn(
-        "label-drop rounded-md border border-paper-line bg-paper font-semi text-paper-ink shadow-[0_24px_48px_-24px_rgb(0_0_0/0.55)]",
+        "rotate-(--tilt) rounded-card border border-paper-line bg-paper font-semi text-paper-ink shadow-card",
         className,
       )}
     >
@@ -40,11 +38,10 @@ export function Waybill({ years, className }: { years: number; className?: strin
       </div>
 
       <dl className="grid grid-cols-2">
-        {rows.map((r, i) => (
+        {rows.map((r) => (
           <div
             key={r.label}
-            className={cn("print-row border-b border-paper-line px-4 py-2", r.wide ? "col-span-2" : "odd:border-r")}
-            style={{ "--i": i } as CSSProperties}
+            className={cn("border-b border-paper-line px-4 py-2", r.wide ? "col-span-2" : "odd:border-r")}
           >
             <dt className="text-[0.74rem] leading-tight font-medium text-paper-muted">{r.label}</dt>
             <dd className="text-[0.95rem] leading-snug font-semibold">{r.value}</dd>
@@ -52,14 +49,8 @@ export function Waybill({ years, className }: { years: number; className?: strin
         ))}
       </dl>
 
-      <div
-        className="flex print-row items-center gap-2 px-4 pt-2.5 pb-1"
-        style={{ "--i": rows.length } as CSSProperties}
-      >
-        <span className="relative grid h-2.5 w-2.5 place-items-center" aria-hidden>
-          <span className="absolute inset-0 pulse-ring rounded-full bg-teal/60" />
-          <span className="h-2.5 w-2.5 rounded-full bg-teal" />
-        </span>
+      <div className="flex items-center gap-2 px-4 pt-2.5 pb-1">
+        <span className="h-2.5 w-2.5 rounded-full bg-accent" aria-hidden />
         <p className="text-[0.88rem] font-semibold">Open to senior full-stack roles</p>
       </div>
 

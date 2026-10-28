@@ -16,8 +16,8 @@ export default async function OG() {
         width: "100%",
         height: "100%",
         display: "flex",
-        background: "#0a1626",
-        color: "#e8eef6",
+        background: "#0b0b0f",
+        color: "#ececf0",
         fontFamily: "sans-serif",
       }}
     >
@@ -47,7 +47,7 @@ export default async function OG() {
           >
             UK
           </div>
-          <div style={{ fontSize: 28, color: "#93a6be" }}>Senior Software Developer, Mumbai</div>
+          <div style={{ fontSize: 28, color: "#9c9ca8" }}>Senior Software Developer, Mumbai</div>
         </div>
         <div
           style={{
@@ -62,9 +62,9 @@ export default async function OG() {
           <span>UTKARSH</span>
           <span>KAMBLE</span>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 30, color: "#c9d5e4" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 30, color: "#c8c8d0" }}>
           <span>I build the software between the order and the doorstep.</span>
-          <div style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 24, color: "#93a6be" }}>
+          <div style={{ display: "flex", gap: 16, alignItems: "center", fontSize: 24, color: "#9c9ca8" }}>
             <div style={{ width: 80, height: 6, background: "#ff7033", borderRadius: 3 }} />
             Order automation, logistics, CRM and e-commerce
           </div>
@@ -83,7 +83,7 @@ export default async function OG() {
             position: "absolute",
             inset: 0,
             display: "flex",
-            background: "linear-gradient(90deg, #0a1626 0%, rgba(10,22,38,0.55) 22%, rgba(10,22,38,0) 45%)",
+            background: "linear-gradient(90deg, #0b0b0f 0%, rgba(11,11,15,0.55) 22%, rgba(11,11,15,0) 45%)",
           }}
         />
       </div>

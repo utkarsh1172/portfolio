@@ -92,7 +92,7 @@ export function MobileMenu({ activeIndex, onClose, onNavigate }: MobileMenuProps
             <a
               href={`#${s.id}`}
               onClick={onNavigate(s.id)}
-              className="display block text-[2.6rem] text-ink"
+              className="block text-[2.1rem] leading-tight font-semibold tracking-tight text-ink"
               aria-current={i === activeIndex ? "location" : undefined}
             >
               {s.label}

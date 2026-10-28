@@ -78,7 +78,7 @@ export default function Globe({ className = "" }: { className?: string }) {
   const inView = useInView(wrapRef, "100px");
   const reduced = useReducedMotion() ?? false;
   const kickRef = useRef<() => void>(() => {});
-  const state = useRef({ lon0: 62, lat0: 14, vel: 0, dragging: false, lastX: 0, lastY: 0, start: 0, auto: true });
+  const state = useRef({ lon0: 62, lat0: 14, vel: 0, dragging: false, lastX: 0, lastY: 0, start: 0 });
   const visibleRef = useRef(inView);
   useEffect(() => {
     visibleRef.current = inView;
@@ -105,6 +105,7 @@ export default function Globe({ className = "" }: { className?: string }) {
     let colors = readColors();
     const refreshColors = () => {
       colors = readColors();
+      kickRef.current();
     };
 
     let w = 0;
@@ -121,7 +122,10 @@ export default function Globe({ className = "" }: { className?: string }) {
       canvas.style.height = `${h}px`;
     };
     resize();
-    const ro = new ResizeObserver(resize);
+    const ro = new ResizeObserver(() => {
+      resize();
+      kickRef.current();
+    });
     ro.observe(wrap);
 
     const mo = new MutationObserver(refreshColors);
@@ -155,8 +159,6 @@ export default function Globe({ className = "" }: { className?: string }) {
         if (Math.abs(s.vel) > 0.01) {
           s.lon0 -= s.vel * dt * 60;
           s.vel *= 0.94;
-        } else if (s.auto && !reduced) {
-          s.lon0 -= 5 * dt;
         }
       }
 
@@ -270,7 +272,9 @@ export default function Globe({ className = "" }: { className?: string }) {
       }
       ctx.globalAlpha = 1;
 
-      if (visibleRef.current || s.dragging) raf = requestAnimationFrame(draw);
+      // Keep drawing only while something moves: the intro, a drag, or its glide.
+      const moving = s.dragging || Math.abs(s.vel) > 0.01 || elapsed < 4;
+      if ((visibleRef.current || s.dragging) && moving) raf = requestAnimationFrame(draw);
       else raf = 0;
     };
 
@@ -286,7 +290,6 @@ export default function Globe({ className = "" }: { className?: string }) {
     // Pointer drag
     const onDown = (e: PointerEvent) => {
       s.dragging = true;
-      s.auto = false;
       s.lastX = e.clientX;
       s.lastY = e.clientY;
       s.vel = 0;
@@ -304,11 +307,9 @@ export default function Globe({ className = "" }: { className?: string }) {
       s.lat0 = Math.max(-40, Math.min(50, s.lat0 + dy * k));
       s.vel = dx * k * 0.6;
     };
-    let resumeTimer = 0;
     const onUp = () => {
       s.dragging = false;
-      window.clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(() => (s.auto = true), 2500);
+      kick();
     };
     canvas.addEventListener("pointerdown", onDown);
     canvas.addEventListener("pointermove", onMove);
@@ -317,7 +318,6 @@ export default function Globe({ className = "" }: { className?: string }) {
 
     return () => {
       cancelAnimationFrame(raf);
-      window.clearTimeout(resumeTimer);
       ro.disconnect();
       mo.disconnect();
       mq.removeEventListener("change", refreshColors);
@@ -342,7 +342,6 @@ export default function Globe({ className = "" }: { className?: string }) {
     else if (e.key === "ArrowDown") s.lat0 = Math.max(-40, s.lat0 - 6);
     else return;
     e.preventDefault();
-    s.auto = false;
     kickRef.current();
   };
 

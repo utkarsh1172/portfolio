@@ -16,6 +16,7 @@ export function Section({
   return (
     <section
       id={id}
+      data-reveal
       aria-labelledby={labelledBy ?? `${id}-heading`}
       className={cn("relative mx-auto w-full max-w-page px-5 py-20 sm:px-8 md:py-28", className)}
     >

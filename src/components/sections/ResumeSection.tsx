@@ -20,7 +20,7 @@ export async function ResumeSection() {
       <div className="grid gap-6 lg:grid-cols-12">
         <Card className="relative overflow-hidden lg:col-span-7">
           <div className="p-6 sm:p-8">
-            <p className="display text-[2.2rem]">{profile.name}</p>
+            <p className="heading text-[1.75rem]">{profile.name}</p>
             <p className="text-muted">Full-stack developer: Next.js, Node.js, React Native, PostgreSQL</p>
             <div className="mt-6 space-y-4">
               {experience.map((r) => (
@@ -43,7 +43,7 @@ export async function ResumeSection() {
 
         <Card className="flex flex-col p-6 sm:p-8 lg:col-span-5">
           <CodeXml size={28} className="text-accent" aria-hidden />
-          <h3 className="display mt-4 text-[2.2rem]">Code</h3>
+          <h3 className="heading mt-4 text-[1.75rem]">Code</h3>
           {github ? (
             <>
               <p className="mt-2 text-muted">

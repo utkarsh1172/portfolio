@@ -24,7 +24,6 @@ export function ExperienceSection() {
             return (
               <li key={j.year + j.title} className="relative flex w-[16%] flex-col items-start">
                 <span className="relative grid h-6 w-6 place-items-center">
-                  {last && <span className="absolute inset-0 pulse-ring rounded-full bg-accent/40" aria-hidden />}
                   <span
                     className={cn("h-4 w-4 rounded-full border-[3px] border-accent", last ? "bg-accent" : "bg-bg")}
                   />
@@ -49,7 +48,7 @@ export function ExperienceSection() {
 
       <div className="mt-16 grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <h3 className="display text-[2.2rem]">Highlights</h3>
+          <h3 className="heading text-[1.75rem]">Highlights</h3>
           <ul className="mt-5 divide-y divide-line border-y border-line">
             {achievements.map((a) => (
               <li key={a} className="flex gap-4 py-4">
@@ -61,7 +60,7 @@ export function ExperienceSection() {
         </div>
         <div className="grid gap-10 sm:grid-cols-2 lg:col-span-6">
           <div>
-            <h3 className="display text-[2.2rem]">Education</h3>
+            <h3 className="heading text-[1.75rem]">Education</h3>
             <ul className="mt-5 space-y-4">
               {education.map((e) => (
                 <li key={e.title}>
@@ -74,7 +73,7 @@ export function ExperienceSection() {
             </ul>
           </div>
           <div>
-            <h3 className="display text-[2.2rem]">Certifications</h3>
+            <h3 className="heading text-[1.75rem]">Certifications</h3>
             <ul className="mt-5 space-y-4">
               {certifications.map((c) => (
                 <li key={c.title}>
