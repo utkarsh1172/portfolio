@@ -12,6 +12,10 @@ export const caseStudies: readonly CaseStudy[] = [
     period: "Sep 2025 to present",
     kind: "CRM",
     status: "In production",
+    links: [
+      { label: "WindyCart seller CRM", url: "https://seller.windycart.cloud/login", access: "login" },
+      { label: "WindyCart supplier CRM", url: "https://supplier.windycart.cloud/login", access: "login" },
+    ],
     summary:
       "An internal CRM that takes 400+ Amazon orders a day from three seller accounts through to a booked shipment, with no manual processing.",
     problem:
@@ -47,6 +51,10 @@ export const caseStudies: readonly CaseStudy[] = [
     period: "Sep 2025 to present",
     kind: "Logistics",
     status: "In production",
+    links: [
+      { label: "RedFox Courier", url: "https://redfoxcourier.com/" },
+      { label: "Growve Logistics", url: "https://growvelogistics.com/solutions" },
+    ],
     summary: "The company's domestic and international logistics service, built on courier partner APIs.",
     problem:
       "The business ships both within India and abroad, and needed one service to take orders in, book shipments with couriers and track them through to delivery.",
@@ -78,6 +86,7 @@ export const caseStudies: readonly CaseStudy[] = [
     period: "Sep 2025 to present",
     kind: "E-commerce",
     status: "In production",
+    links: [{ label: "Atlantic Basket", url: "https://demo.atlanticbasket.in/", access: "demo" }],
     summary: "An e-commerce storefront with an admin panel for region-wise stock across US and UAE warehouses.",
     problem:
       "Stock sits in warehouses in more than one country, so inventory has to be managed per region while customers check out on a single storefront.",
@@ -109,22 +118,25 @@ export const caseStudies: readonly CaseStudy[] = [
     status: "In production",
     summary:
       "A gateway that carries storefront orders into the CRM and moves data between internal systems and third parties.",
-    problem:
-      "The storefront, the CRM and outside services each hold part of an order's story. Without a single path between them, data has to be moved by hand.",
+    problem: "Storefront orders need to reach the CRM and third-party services without manual data transfer.",
     built: [
       "A gateway that brings storefront orders into the CRM.",
       "End-to-end data transfer between internal systems and third-party services.",
+      "JWT and OAuth 2.0 authentication with role-based access control (RBAC).",
+      "API documentation using Swagger/OpenAPI.",
     ],
     flow: [
       { title: "Storefront orders" },
-      { title: "API gateway", note: "One path between systems" },
+      { title: "API gateway", note: "JWT, OAuth 2.0 and RBAC" },
       { title: "Order automation CRM" },
       { title: "Third-party services" },
     ],
-    stack: ["API gateway", "Third-party integrations"],
+    stack: ["API gateway", "Third-party integrations", "JWT", "OAuth 2.0", "RBAC", "Swagger / OpenAPI"],
     roleId: "growve",
     decisions: [
       "One gateway handles data transfer between internal systems and third-party services, so storefront orders reach the CRM through a single path.",
+      "JWT and OAuth 2.0 authentication with role-based access control secures the gateway.",
+      "Swagger/OpenAPI documents the APIs used to exchange data between systems.",
     ],
     outcome: "Storefront orders reach the CRM without manual transfer.",
   },
@@ -135,6 +147,7 @@ export const caseStudies: readonly CaseStudy[] = [
     period: "Jan 2024 to Jul 2025",
     kind: "Mobile",
     status: "Shipped",
+    links: [{ label: "Linky Pro", url: "https://linky.biz/en-IN/" }],
     summary: "Features for the Linky Pro React Native app, kept in sync with its web portal.",
     problem:
       "Users work across the mobile app and the web portal, so their data has to match on both, and the app needed to load faster.",

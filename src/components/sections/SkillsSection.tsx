@@ -26,8 +26,8 @@ export function SkillsSection() {
 
   return (
     <Section id="stack">
-      <SectionHeading id="stack-heading" title="Stack, mapped to the work">
-        Grouped by where each tool sits in a commerce system. Select one to see where I&rsquo;ve used it.
+      <SectionHeading id="stack-heading" title="Technical skills">
+        Select a technology to see the projects or roles where I&rsquo;ve used it.
       </SectionHeading>
 
       <div className="grid gap-10 lg:grid-cols-12">
@@ -70,14 +70,14 @@ export function SkillsSection() {
         </div>
 
         <aside className="lg:col-span-4" aria-live="polite" aria-label="Where I've used the selected skill">
-          <Card className="p-6 lg:sticky lg:top-28">
-            <AnimatePresence mode="wait">
+          <Card className="relative p-6 lg:sticky lg:top-28">
+            <AnimatePresence initial={false} mode="popLayout">
               <motion.div
                 key={skill}
-                initial={reduce ? false : { opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduce ? 0.1 : 0.18 }}
               >
                 <p className="text-sm text-muted">{current?.group}</p>
                 <p className="heading mt-1 text-[2rem]">{skill}</p>
@@ -91,14 +91,14 @@ export function SkillsSection() {
                             <button
                               type="button"
                               onClick={() => openCase(id)}
-                              className="group flex w-full items-center justify-between gap-3 rounded-card border border-line px-3 py-2.5 text-left hover:border-accent"
+                              className="group flex w-full items-center justify-between gap-3 border-b border-line py-2.5 text-left hover:border-accent"
                             >
                               <span className="font-semi font-semibold">{caseName.get(id)}</span>
                               <span className="text-sm text-accent group-hover:underline">Open</span>
                             </button>
                           </li>
                         ) : (
-                          <li key={id} className="rounded-card border border-line px-3 py-2.5">
+                          <li key={id} className="border-b border-line py-2.5 last:border-b-0">
                             <span className="font-semi font-semibold">{roleName.get(id)}</span>
                             <span className="block text-sm text-muted">Part of the team stack in this role</span>
                           </li>

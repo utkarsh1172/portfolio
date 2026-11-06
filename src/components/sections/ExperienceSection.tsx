@@ -9,20 +9,18 @@ import { RoleList } from "./RoleList";
 export function ExperienceSection() {
   return (
     <Section id="career">
-      <SectionHeading id="career-heading" title="Career route">
-        {yearsSince(CAREER_START)} years across three companies, from enterprise fitness apps to the order and logistics
-        systems I build today.
+      <SectionHeading id="career-heading" title="Experience">
+        {yearsSince(CAREER_START)} years of experience across Growve, ACE International and Fxgetactive.
       </SectionHeading>
 
-      {/* Journey: a route with one stop per milestone, plus the next one. */}
+      {/* Education and employment dates from the resume. */}
       <div className="-mx-5 scroll-x px-5 pb-2 sm:mx-0 sm:px-0">
-        <ol className="relative flex min-w-[44rem] justify-between" aria-label="Career journey">
-          <span className="absolute top-[11px] right-[12%] left-3 h-[2px] bg-accent" aria-hidden />
-          <span className="absolute top-[11px] right-3 h-[2px] w-[12%] route-dash" aria-hidden />
+        <ol className="relative flex min-w-[44rem] justify-between" aria-label="Education and employment timeline">
+          <span className="absolute top-[11px] right-[16%] left-3 h-[2px] bg-accent" aria-hidden />
           {journey.map((j, i) => {
             const last = i === journey.length - 1;
             return (
-              <li key={j.year + j.title} className="relative flex w-[16%] flex-col items-start">
+              <li key={j.year + j.title} className="relative flex w-[18%] flex-col items-start">
                 <span className="relative grid h-6 w-6 place-items-center">
                   <span
                     className={cn("h-4 w-4 rounded-full border-[3px] border-accent", last ? "bg-accent" : "bg-bg")}
@@ -34,13 +32,6 @@ export function ExperienceSection() {
               </li>
             );
           })}
-          <li className="relative flex w-[12%] flex-col items-end text-right">
-            <span className="grid h-6 w-6 place-items-center">
-              <span className="h-4 w-4 rounded-full border-[3px] border-dashed border-muted bg-bg" />
-            </span>
-            <span className="display mt-3 text-[1.9rem] text-muted">Next</span>
-            <span className="font-semi leading-tight font-semibold text-muted">Your team</span>
-          </li>
         </ol>
       </div>
 

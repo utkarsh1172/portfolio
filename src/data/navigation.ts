@@ -1,8 +1,8 @@
 import type { NavItem } from "@/types";
 
 export const navigation: readonly NavItem[] = [
-  { id: "about", label: "About" },
   { id: "work", label: "Work" },
+  { id: "about", label: "About" },
   { id: "demo", label: "Demo" },
   { id: "career", label: "Career" },
   { id: "stack", label: "Stack" },

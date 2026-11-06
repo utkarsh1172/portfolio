@@ -2,61 +2,50 @@
 
 import { useEffect } from "react";
 
-/**
- * Two small enhancements, mounted once in the root layout:
- * sections fade up as they scroll into view, and the light on a .sheen card
- * follows the pointer. Without JavaScript, or under reduced motion, every
- * section is simply visible.
- */
+/** The hero owns the entrance; reading sections stay visible and still. */
 export function Effects() {
   useEffect(() => {
-    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
-
-    // Anything already on screen shows at once, so nothing visible blinks out.
-    for (const el of sections) if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add("is-in");
-    document.documentElement.classList.add("reveal-ready");
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          e.target.classList.add("is-in");
-          io.unobserve(e.target);
-        }
-      },
-      { rootMargin: "0px 0px -10% 0px" },
-    );
-    sections.forEach((el) => {
-      if (!el.classList.contains("is-in")) io.observe(el);
-    });
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
+    const pointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let last: PointerEvent | null = null;
+    let current: HTMLElement | null = null;
+    const light = document.createElement("span");
+    light.className = "pointer-highlight";
+    light.setAttribute("aria-hidden", "true");
+
+    const clear = () => {
+      light.remove();
+      current = null;
+      cancelAnimationFrame(frame);
+      frame = 0;
+    };
     const apply = () => {
       frame = 0;
       const card = last?.target instanceof Element ? last.target.closest<HTMLElement>(".sheen") : null;
+      if (card !== current) {
+        light.remove();
+        current = card;
+        card?.appendChild(light);
+      }
       if (!card || !last) return;
-      const r = card.getBoundingClientRect();
-      card.style.setProperty("--mx", `${last.clientX - r.left}px`);
-      card.style.setProperty("--my", `${last.clientY - r.top}px`);
+      const rect = card.getBoundingClientRect();
+      light.style.transform = `translate(${last.clientX - rect.left - 140}px, ${last.clientY - rect.top - 140}px)`;
     };
-    const onMove = (e: PointerEvent) => {
-      last = e;
+    const move = (event: PointerEvent) => {
+      if (!pointer.matches || reduce.matches) return;
+      last = event;
       if (!frame) frame = requestAnimationFrame(apply);
     };
-    document.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointermove", move, { passive: true });
+    document.documentElement.addEventListener("pointerleave", clear);
+    reduce.addEventListener("change", clear);
     return () => {
-      document.removeEventListener("pointermove", onMove);
-      cancelAnimationFrame(frame);
+      document.removeEventListener("pointermove", move);
+      document.documentElement.removeEventListener("pointerleave", clear);
+      reduce.removeEventListener("change", clear);
+      clear();
     };
   }, []);
-
   return null;
 }

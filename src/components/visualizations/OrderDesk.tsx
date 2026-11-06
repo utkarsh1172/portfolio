@@ -1,7 +1,7 @@
 "use client";
 
 import { Pause, Play, Plus, StepForward } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useReducer, useRef } from "react";
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -32,8 +32,17 @@ export default function OrderDesk() {
 
   useEffect(() => {
     if (!state.running || !inView) return;
-    const t = window.setInterval(() => dispatch({ type: "tick" }), TICK_MS);
-    return () => window.clearInterval(t);
+    let timer: number | undefined;
+    const syncVisibility = () => {
+      window.clearInterval(timer);
+      if (!document.hidden) timer = window.setInterval(() => dispatch({ type: "tick" }), TICK_MS);
+    };
+    syncVisibility();
+    document.addEventListener("visibilitychange", syncVisibility);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", syncVisibility);
+    };
   }, [state.running, inView]);
 
   const counts = countByStage(state.orders);
@@ -71,19 +80,12 @@ export default function OrderDesk() {
         {pipeline.map((p, i) => (
           <li key={p.id} className="border-r border-b border-line px-4 py-4 last:border-r-0 sm:border-b-0 sm:px-5">
             <span className="block text-[0.82rem] leading-tight text-muted">{p.label}</span>
-            <motion.span
-              key={counts[i]}
-              initial={reduce ? false : { y: -4, opacity: 0.4 }}
-              animate={{ y: 0, opacity: 1 }}
-              className={cn("display mt-1 block text-[2.2rem] tabular-nums", counterColor(i))}
-            >
-              {counts[i]}
-            </motion.span>
+            <span className={cn("display mt-1 block text-[2.2rem] tabular-nums", counterColor(i))}>{counts[i]}</span>
           </li>
         ))}
       </ol>
 
-      <div className="grid lg:grid-cols-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12">
         <div className="min-w-0 border-b border-line lg:col-span-8 lg:border-r lg:border-b-0">
           <div className="scroll-x">
             <table className="w-full min-w-[40rem] text-left text-[0.95rem]">
@@ -108,48 +110,44 @@ export default function OrderDesk() {
                 </tr>
               </thead>
               <tbody>
-                <AnimatePresence initial={false}>
-                  {state.orders.map((o) => {
-                    const on = selected?.id === o.id;
-                    return (
-                      <motion.tr
-                        key={o.id}
-                        layout={!reduce}
-                        initial={reduce ? false : { opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.35 }}
-                        className={cn(
-                          "cursor-pointer border-b border-line/70 transition-colors",
-                          on ? "bg-surface-2" : "hover:bg-surface-2/50",
-                        )}
-                        onClick={() => select(o.id)}
-                      >
-                        <td className="px-5 py-3">
-                          <button
-                            type="button"
-                            className="text-left font-semi font-semibold tabular-nums"
-                            aria-label={`Show tracking for order ${o.id}`}
-                            aria-pressed={on}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              select(o.id);
-                            }}
-                          >
-                            {o.id}
-                          </button>
-                          <span className="block text-sm text-muted">{o.item}</span>
-                        </td>
-                        <td className="px-3 py-3 text-muted">{o.account.replace("Seller account ", "Account ")}</td>
-                        <td className="px-3 py-3">{o.dest}</td>
-                        <td className="px-3 py-3">
-                          <Badge tone={toneFor(o.stage)}>{pipeline[o.stage].label}</Badge>
-                        </td>
-                        <td className="px-3 py-3 text-muted">{o.courier ?? "Not booked"}</td>
-                      </motion.tr>
-                    );
-                  })}
-                </AnimatePresence>
+                {state.orders.map((o) => {
+                  const on = selected?.id === o.id;
+                  return (
+                    <motion.tr
+                      key={o.id}
+                      initial={{ opacity: reduce ? 0.8 : 0.4 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: reduce ? 0.12 : 0.2, ease: [0.23, 1, 0.32, 1] }}
+                      className={cn(
+                        "cursor-pointer border-b border-line/70 transition-colors",
+                        on ? "bg-surface-2" : "hover:bg-surface-2/50",
+                      )}
+                      onClick={() => select(o.id)}
+                    >
+                      <td className="px-5 py-3">
+                        <button
+                          type="button"
+                          className="text-left font-semi font-semibold tabular-nums"
+                          aria-label={`Show tracking for order ${o.id}`}
+                          aria-pressed={on}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            select(o.id);
+                          }}
+                        >
+                          {o.id}
+                        </button>
+                        <span className="block text-sm text-muted">{o.item}</span>
+                      </td>
+                      <td className="px-3 py-3 text-muted">{o.account.replace("Seller account ", "Account ")}</td>
+                      <td className="px-3 py-3">{o.dest}</td>
+                      <td className="px-3 py-3">
+                        <Badge tone={toneFor(o.stage)}>{pipeline[o.stage].label}</Badge>
+                      </td>
+                      <td className="px-3 py-3 text-muted">{o.courier ?? "Not booked"}</td>
+                    </motion.tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

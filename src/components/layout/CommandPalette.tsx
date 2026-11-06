@@ -85,7 +85,7 @@ export function CommandPalette() {
         id: `case-${c.id}`,
         label: c.name,
         group: "Case studies" as const,
-        keywords: `${c.kind} ${c.company} ${c.stack.join(" ")} ${c.summary} ${c.built.join(" ")} project`,
+        keywords: `${c.kind} ${c.company} ${c.stack.join(" ")} ${c.summary} ${c.built.join(" ")} ${(c.links ?? []).map((link) => `${link.label} ${link.url}`).join(" ")} project`,
         icon: <Briefcase size={16} />,
         run: () => openCase(c.id),
       })),

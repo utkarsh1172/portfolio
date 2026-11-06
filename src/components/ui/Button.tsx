@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 export type ButtonVariant = "primary" | "ghost" | "quiet" | "link";
 
 const base =
-  "group inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-semi text-[0.98rem] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50";
+  "pressable group inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-semi text-[0.98rem] font-semibold disabled:cursor-not-allowed disabled:opacity-50";
 
 const variants: Record<ButtonVariant, string> = {
   primary: "accent-gradient px-5 text-accent-ink hover:brightness-110 active:brightness-95",

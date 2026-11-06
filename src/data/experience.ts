@@ -8,7 +8,8 @@ export const experience: readonly Role[] = [
     start: "Sep 2025",
     end: "Present",
     current: true,
-    stack: "Next.js, Node.js, Express.js, Fastify, PostgreSQL, Firebase / Firestore",
+    stack:
+      "Next.js, Node.js, Express.js, Fastify, PostgreSQL, Redis, Firebase / Firestore, AWS (S3, SQS, EC2), Docker, GitHub Actions",
     points: [
       {
         label: "Order automation CRM",
@@ -23,8 +24,16 @@ export const experience: readonly Role[] = [
         text: "Storefront plus admin for region-wise stock across US and UAE warehouses (1M+ SKUs), with Razorpay payments.",
       },
       {
-        label: "API gateway",
-        text: "Brings storefront orders into the CRM and handles data transfer between internal systems and third-party services.",
+        label: "API gateway and security",
+        text: "Routes storefront orders into the CRM and handles data exchange with third-party services, secured with JWT, OAuth 2.0 and role-based access control (RBAC), with APIs documented using Swagger/OpenAPI.",
+      },
+      {
+        label: "Caching and performance",
+        text: "Added Redis caching for frequently read order, inventory and shipment data to reduce repeated database queries and speed up admin-panel and storefront responses.",
+      },
+      {
+        label: "Deployment and CI/CD",
+        text: "Containerized services with Docker, deployed them on AWS EC2 and VPS behind Nginx, and automated builds and deployments with GitHub Actions. Used AWS SQS and event-driven workers for queued jobs.",
       },
       {
         label: "Database design",
@@ -46,6 +55,7 @@ export const experience: readonly Role[] = [
     company: "ACE International",
     start: "Jan 2024",
     end: "Jul 2025",
+    stack: "React Native, Node.js, REST APIs",
     points: [
       {
         label: "Linky Pro app",
@@ -67,6 +77,7 @@ export const experience: readonly Role[] = [
     company: "Fxgetactive",
     start: "Oct 2022",
     end: "Dec 2023",
+    stack: "React Native, Nest.js, MySQL, C#, PlayFab, ML Kit",
     points: [
       {
         label: "Fitness apps",

@@ -26,6 +26,12 @@ export interface FlowNode {
 
 export type CaseStudyKind = "Logistics" | "CRM" | "E-commerce" | "Integration" | "Mobile";
 
+export interface ProjectLink {
+  label: string;
+  url: string;
+  access?: "login" | "demo";
+}
+
 export interface CaseStudy {
   id: CaseStudyId;
   name: string;
@@ -33,6 +39,7 @@ export interface CaseStudy {
   period: string;
   kind: CaseStudyKind;
   status: "In production" | "Shipped";
+  links?: readonly ProjectLink[];
   summary: string;
   problem: string;
   built: string[];

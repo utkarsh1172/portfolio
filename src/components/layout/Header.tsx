@@ -1,42 +1,39 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { ArrowUpRight, Menu } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 import { navigation } from "@/data/navigation";
 import { profile } from "@/data/profile";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
-import { cn } from "@/lib/cn";
 import { scrollToSection } from "@/lib/scroll";
 import { CommandPalette } from "./CommandPalette";
 import { MobileMenu } from "./MobileMenu";
 import { ThemeToggle } from "./ThemeToggle";
 
-const ids = navigation.map((s) => s.id);
+const ids = navigation.map((section) => section.id);
+const desktopLinks = [
+  { id: "work", label: "Work" },
+  { id: "about", label: "About" },
+  { id: "career", label: "Experience" },
+  { id: "stack", label: "Stack" },
+];
 
-/**
- * The nav is a delivery route: each section is a checkpoint, the line fills
- * as you scroll, and the checkpoint you are on is marked like a live stop.
- */
 export function Header() {
   const { active, progress } = useScrollSpy(ids);
   const [open, setOpen] = useState(false);
   const activeIndex = ids.indexOf(active as (typeof ids)[number]);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  // Return focus to the menu button when the menu is dismissed, but not after
-  // following a link (focus should stay with the page the visitor jumped to).
   const restoreFocus = useRef(false);
   const close = useCallback(() => {
     restoreFocus.current = true;
     setOpen(false);
   }, []);
-
   const go = useCallback(
-    (id: string) => (e: React.MouseEvent) => {
-      e.preventDefault();
+    (id: string) => (event: React.MouseEvent) => {
+      event.preventDefault();
       restoreFocus.current = false;
       setOpen(false);
-      // Wait a frame so the mobile menu releases its scroll lock first.
       requestAnimationFrame(() => scrollToSection(id));
     },
     [],
@@ -44,79 +41,41 @@ export function Header() {
 
   return (
     <>
-      <header className="glass-bar fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)]">
-        <div className="mx-auto flex h-16 max-w-page items-center gap-4 px-5 sm:px-8">
+      <header className="site-header glass-bar fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)]">
+        <div className="mx-auto flex h-20 max-w-[85rem] items-center gap-8 px-5 sm:px-8 lg:px-16">
           <a
             href="#top"
             onClick={go("top")}
-            className="group flex shrink-0 items-center gap-3"
+            className="brand-link group flex shrink-0 items-center gap-3"
             aria-label={`${profile.name}, back to top`}
           >
-            <span className="grid h-9 w-9 place-items-center rounded-lg border-2 border-accent font-display text-lg leading-none font-bold text-accent transition group-hover:bg-accent group-hover:text-accent-ink">
-              UK
+            <span className="brand-monogram">
+              uk<span>.</span>
             </span>
-            <span className="hidden font-display text-[1.05rem] font-semibold tracking-tight sm:block">
-              {profile.name}
-            </span>
+            <span className="hidden font-display text-sm font-medium tracking-tight sm:block">{profile.name}</span>
           </a>
-
-          <nav aria-label="Sections" className="relative mx-auto hidden flex-1 lg:block">
-            <div className="relative mx-6">
-              <div className="absolute top-[7px] right-0 left-0 h-[2px] route-dash" aria-hidden />
-              <div
-                className="absolute top-[7px] left-0 h-[2px] bg-accent transition-[width] duration-200"
-                style={{ width: `${progress * 100}%` }}
-                aria-hidden
-              />
-              <ol className="relative flex justify-between">
-                {navigation.map((s, i) => {
-                  const current = i === activeIndex;
-                  const passed = i < activeIndex;
-                  return (
-                    <li key={s.id} className="flex flex-col items-center">
-                      <a
-                        href={`#${s.id}`}
-                        onClick={go(s.id)}
-                        aria-current={current ? "location" : undefined}
-                        className="group flex flex-col items-center gap-1.5 rounded-md px-1"
-                      >
-                        <span className="relative grid h-4 w-4 place-items-center">
-                          <span
-                            className={cn(
-                              "h-3 w-3 rounded-full border-2 transition",
-                              current
-                                ? "border-accent bg-accent"
-                                : passed
-                                  ? "border-accent bg-bg"
-                                  : "border-line bg-bg group-hover:border-ink/50",
-                            )}
-                          />
-                        </span>
-                        <span
-                          className={cn(
-                            "text-[0.84rem] font-medium transition",
-                            current ? "text-ink" : "text-muted group-hover:text-ink",
-                          )}
-                        >
-                          {s.label}
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
+          <nav aria-label="Sections" className="ml-auto hidden items-center gap-7 lg:flex">
+            {desktopLinks.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                onClick={go(link.id)}
+                aria-current={active === link.id ? "location" : undefined}
+                className="header-link"
+              >
+                {link.label}
+              </a>
+            ))}
           </nav>
-
           <div className="ml-auto flex items-center gap-1 lg:ml-0">
             <CommandPalette />
             <ThemeToggle />
             <a
               href="#contact"
               onClick={go("contact")}
-              className="accent-gradient hidden min-h-10 items-center rounded-full px-4 font-semi text-[0.95rem] font-semibold text-accent-ink transition hover:brightness-110 md:inline-flex"
+              className="header-contact ml-3 hidden min-h-11 items-center gap-3 rounded-full border border-line px-5 text-xs font-semibold hover:border-accent md:inline-flex"
             >
-              Get in touch
+              Let’s talk <ArrowUpRight size={15} aria-hidden />
             </a>
             <button
               ref={menuButtonRef}
@@ -127,13 +86,16 @@ export function Header() {
               aria-controls="mobile-route"
               onClick={() => setOpen(true)}
             >
-              <Menu size={18} aria-hidden />
+              <Menu size={20} aria-hidden />
             </button>
           </div>
         </div>
-        <div className="h-[2px] bg-accent lg:hidden" style={{ width: `${progress * 100}%` }} aria-hidden />
+        <div
+          className="header-progress h-px origin-left bg-accent"
+          style={{ transform: `scaleX(${progress})` }}
+          aria-hidden
+        />
       </header>
-
       <AnimatePresence
         onExitComplete={() => {
           if (restoreFocus.current) menuButtonRef.current?.focus();

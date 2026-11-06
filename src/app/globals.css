@@ -1,87 +1,71 @@
 @import "tailwindcss";
 
-/*
- * Design tokens.
- *
- * Colours are stored as RGB channels so both Tailwind utilities (via the
- * @theme mapping below) and canvas code (Globe reads them at runtime) share
- * one source of truth.
- *
- * Dark is the default: the reference site's near-black base, off-white ink,
- * translucent surfaces and violet-to-cyan accent system. Teal and amber are
- * retained only where the globe and order desk need distinct status colours;
- * both come from the same reference palette.
- */
+/* Graphite, warm paper and signal green. Shared by the DOM and canvas. */
 :root {
-  --bg: 7 7 12;
-  --bg-2: 13 13 22;
-  --surface: 16 16 21;
-  --surface-2: 20 20 26;
-  /* Composite of the reference's #ffffff14 border over #07070c. */
-  --line: 27 27 32;
-  --ink: 232 232 240;
-  --muted: 154 154 176;
-  --accent: 141 84 255;
-  --accent-2: 0 183 215;
-  --accent-soft: 167 139 250;
-  --accent-blue: 96 165 250;
-  --accent-cyan: 34 211 238;
-  --accent-ink: 255 255 255;
-  --teal: 0 210 148;
-  --amber: 252 187 0;
-  --globe-dot: 154 154 176;
-  --globe-sea: 13 13 22;
-  /* Waybill card: a printed label sitting on the page. */
-  --paper: 232 232 240;
-  --paper-ink: 7 7 12;
-  --paper-muted: 78 78 96;
-  --paper-line: 196 196 208;
-  /* Glass: a faint fill, a hairline edge and light catching the top edge. */
-  --glass: 255 255 255;
+  --bg: 16 18 15;
+  --bg-2: 21 24 20;
+  --surface: 23 26 22;
+  --surface-2: 32 37 29;
+  --line: 53 59 48;
+  --ink: 240 238 230;
+  --muted: 163 169 155;
+  --accent: 197 239 106;
+  --accent-2: 146 183 111;
+  --accent-soft: 208 238 164;
+  --accent-blue: 161 190 146;
+  --accent-cyan: 191 224 163;
+  --accent-ink: 20 27 13;
+  --teal: 114 208 165;
+  --amber: 226 187 115;
+  --globe-dot: 149 165 136;
+  --globe-sea: 16 18 15;
+  --paper: 232 231 218;
+  --paper-ink: 23 28 19;
+  --paper-muted: 81 89 72;
+  --paper-line: 190 194 175;
+  --glass: 240 238 230;
   --glass-alpha: 0.035;
-  --glass-edge: 255 255 255;
+  --glass-edge: 240 238 230;
   --glass-edge-alpha: 0.08;
   --glass-highlight: 0.05;
-  --sheen: 255 255 255;
-  --sheen-alpha: 0.05;
-  --shadow: 0 1px 0 rgb(255 255 255 / 0.025), 0 18px 40px -28px rgb(var(--accent) / 0.28);
+  --sheen: 197 239 106;
+  --sheen-alpha: 0.045;
+  --shadow: 0 18px 45px -24px rgb(0 0 0 / 0.45);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   color-scheme: dark;
-
-  /* Keep content clear of translucent phone system bars (zero on desktop). */
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-
-/* Light theme, behind the toggle. */
 :root[data-theme="light"] {
-  --bg: 232 232 240;
-  --bg-2: 255 255 255;
-  --surface: 255 255 255;
-  --surface-2: 221 214 255;
-  --line: 196 196 208;
-  --ink: 7 7 12;
-  --muted: 78 78 96;
-  /* Reference-palette shades dark enough for controls on the light canvas. */
-  --accent: 127 34 254;
-  --accent-2: 0 132 204;
-  --accent-ink: 255 255 255;
-  --teal: 0 128 98;
-  --amber: 138 86 0;
-  --globe-dot: 78 78 96;
-  --globe-sea: 221 214 255;
-  --paper: 255 255 255;
-  --paper-ink: 7 7 12;
-  --paper-muted: 78 78 96;
-  --paper-line: 196 196 208;
+  --bg: 242 240 230;
+  --bg-2: 248 247 240;
+  --surface: 248 247 240;
+  --surface-2: 226 231 213;
+  --line: 196 201 181;
+  --ink: 27 33 21;
+  --muted: 86 95 73;
+  --accent: 62 101 20;
+  --accent-2: 71 110 64;
+  --accent-soft: 72 109 32;
+  --accent-ink: 248 251 242;
+  --teal: 21 110 77;
+  --amber: 127 88 20;
+  --globe-dot: 106 131 87;
+  --globe-sea: 242 240 230;
+  --paper: 250 249 242;
+  --paper-ink: 27 33 21;
+  --paper-muted: 86 95 73;
+  --paper-line: 196 201 181;
   --glass: 255 255 255;
   --glass-alpha: 0.62;
-  --glass-edge: 7 7 12;
-  --glass-edge-alpha: 0.09;
+  --glass-edge: 27 33 21;
+  --glass-edge-alpha: 0.1;
   --glass-highlight: 0.85;
-  --sheen: 255 255 255;
-  --sheen-alpha: 0.6;
-  --shadow: 0 1px 0 rgb(7 7 12 / 0.04), 0 16px 32px -20px rgb(127 34 254 / 0.2);
+  --sheen: 62 101 20;
+  --sheen-alpha: 0.045;
+  --shadow: 0 18px 45px -26px rgb(39 53 22 / 0.18);
   color-scheme: light;
 }
 
@@ -113,13 +97,13 @@
     var(--font-inter), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-semi: var(--font-manrope), "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: var(--font-space-grotesk), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-sora), "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-space-grotesk), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 
   /* One radius and one shadow for every surface. */
   --radius-card: 1rem;
   --shadow-card: var(--shadow);
 
-  --container-page: 68.75rem;
+  --container-page: 75rem;
 }
 
 /* Lets the card sheen glide after the pointer instead of jumping. */
@@ -139,6 +123,8 @@
     scroll-behavior: smooth;
     scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 5rem);
     -webkit-text-size-adjust: 100%;
+    scrollbar-color: rgb(var(--line)) rgb(var(--bg));
+    scrollbar-width: thin;
   }
 
   body {
@@ -150,6 +136,7 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    caret-color: rgb(var(--accent));
   }
 
   /* Paint the status-bar strip behind a translucent phone toolbar. */
@@ -178,6 +165,15 @@
     outline: 2px solid rgb(var(--accent));
     outline-offset: 3px;
     border-radius: 4px;
+  }
+
+  a {
+    text-underline-offset: 0.25em;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
   }
 }
 
@@ -217,8 +213,8 @@
   /* The reference uses violet-to-cyan for actions and a softer three-stop
    * treatment for its main value proposition. */
   .accent-gradient {
-    background-image: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent-2)));
-    box-shadow: 0 10px 24px -12px rgb(var(--accent) / 0.55);
+    background: rgb(var(--accent));
+    color: rgb(var(--accent-ink));
   }
 
   .text-accent-gradient {
@@ -234,18 +230,13 @@
   }
 
   .glass {
-    background: rgb(var(--glass) / var(--glass-alpha));
-    border: 1px solid rgb(var(--glass-edge) / var(--glass-edge-alpha));
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / var(--glass-highlight)),
-      var(--shadow);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    backdrop-filter: blur(16px) saturate(140%);
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--line));
   }
 
   /* The header sits over scrolling content, so it carries more of the page colour. */
   .glass-bar {
-    background: rgb(var(--bg) / 0.72);
+    background: rgb(var(--bg) / 0.92);
     border-bottom: 1px solid rgb(var(--glass-edge) / var(--glass-edge-alpha));
     box-shadow: inset 0 1px 0 rgb(255 255 255 / calc(var(--glass-highlight) * 0.6));
     -webkit-backdrop-filter: blur(16px) saturate(140%);
@@ -255,28 +246,18 @@
   /* A soft light that follows the pointer across a card (position set by Effects). */
   .sheen {
     position: relative;
+    isolation: isolate;
+    overflow: hidden;
   }
-  .sheen::before {
-    content: "";
+  .pointer-highlight {
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 280px;
+    z-index: -1;
     pointer-events: none;
-    opacity: 0;
-    background: radial-gradient(
-      22rem circle at var(--mx) var(--my),
-      rgb(var(--sheen) / var(--sheen-alpha)),
-      transparent 65%
-    );
-    transition:
-      opacity 0.3s ease,
-      --mx 0.45s ease-out,
-      --my 0.45s ease-out;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .sheen:hover::before {
-      opacity: 1;
-    }
+    background: radial-gradient(circle, rgb(var(--sheen) / var(--sheen-alpha)), transparent 70%);
   }
 
   /* Faint mirror image under the hero name. Chromium and Safari; elsewhere it is simply absent. */
@@ -385,35 +366,101 @@
 /* Soft light behind the photo; --mx / --my are set by HeroLight on fine pointers. */
 @utility hero-sheen {
   background:
-    radial-gradient(
-      30rem circle at var(--mx, 72%) var(--my, 38%),
-      rgb(var(--accent) / 0.2),
-      transparent 66%
-    ),
+    radial-gradient(30rem circle at var(--mx, 72%) var(--my, 38%), rgb(var(--accent) / 0.2), transparent 66%),
     radial-gradient(28rem circle at 100% 34%, rgb(var(--accent-2) / 0.14), transparent 68%);
 }
 
 /* Arrow icons inside buttons nudge toward where the link goes. */
 @utility nudge-r {
-  transition: transform 0.2s ease;
-  .group:hover &,
+  transition: transform 160ms var(--ease-out);
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover & {
+      transform: translate(2px, -2px);
+    }
+  }
   .group:focus-visible & {
     transform: translate(2px, -2px);
   }
 }
 
 @utility nudge-d {
-  transition: transform 0.2s ease;
-  .group:hover &,
+  transition: transform 160ms var(--ease-out);
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover & {
+      transform: translateY(3px);
+    }
+  }
   .group:focus-visible & {
     transform: translateY(3px);
   }
 }
 
-/*
- * Reduced motion. !important is deliberate here: it must override every
- * animation and transition declared anywhere, including inline styles.
- */
+.pressable {
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    filter 160ms ease;
+}
+.pressable:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.brand-monogram {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.brand-monogram span {
+  color: rgb(var(--accent));
+}
+.header-link {
+  position: relative;
+  padding-block: 1rem;
+  color: rgb(var(--muted));
+  font-size: 0.8rem;
+  transition: color 160ms ease;
+}
+.header-link:hover,
+.header-link[aria-current] {
+  color: rgb(var(--ink));
+}
+.header-link::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0.45rem;
+  height: 1px;
+  background: rgb(var(--accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms var(--ease-out);
+}
+.header-link[aria-current]::after {
+  transform: scaleX(1);
+}
+.header-contact {
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+.header-contact:hover {
+  background-color: rgb(var(--surface-2));
+}
+.h-section {
+  font-weight: 500;
+  font-size: clamp(2.3rem, 4.2vw, 3.7rem);
+  line-height: 1.04;
+}
+.heading {
+  font-weight: 500;
+}
+.section-rule {
+  border-top: 1px solid rgb(var(--line));
+}
+
+/* Keep color/opacity feedback, collapse the spatial choreography and delays. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -424,10 +471,28 @@
     animation-duration: 0.001ms !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-duration: 120ms !important;
   }
   .reveal-ready [data-reveal]:not(.is-in) {
     opacity: 1;
     transform: none;
+  }
+  .hero-name-line > span,
+  .hero-message,
+  .hero-support,
+  .hero-portrait,
+  .hero-route-track > span,
+  .hero-route-node {
+    animation: none;
+  }
+  .pressable:active:not(:disabled),
+  .group:hover .nudge-r,
+  .group:focus-visible .nudge-r,
+  .group:hover .nudge-d,
+  .group:focus-visible .nudge-d {
+    transform: none;
+  }
+  .pointer-highlight {
+    display: none;
   }
 }

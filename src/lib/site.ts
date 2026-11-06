@@ -25,7 +25,7 @@ export const googleSiteVerification = parsed.data.NEXT_PUBLIC_GOOGLE_SITE_VERIFI
 export const siteTitle = "Utkarsh Kamble | Senior Full-Stack Developer in Mumbai";
 
 export const siteDescription =
-  "Official portfolio of Utkarsh Kamble, a senior full-stack developer in Mumbai building logistics, CRM and e-commerce platforms with Next.js and Node.js.";
+  "Utkarsh Kamble, a senior full-stack developer in Mumbai building logistics, CRM and e-commerce systems with Next.js, Node.js, Redis and Docker.";
 
 /** Natural search phrases for metadata consumers that still read keywords. */
 export const siteKeywords = [
@@ -40,7 +40,10 @@ export const siteKeywords = [
   "CRM developer",
   "Next.js developer",
   "Node.js developer",
+  "Redis caching",
+  "Docker",
+  "GitHub Actions CI/CD",
 ] as const;
 
 /** Human-edited content date used by ProfilePage JSON-LD and the sitemap. */
-export const siteLastModified = "2026-10-28";
+export const siteLastModified = "2026-11-06";

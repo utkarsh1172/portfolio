@@ -1,105 +1,122 @@
-import { Card } from "@/components/ui/Card";
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { GlobeLazy } from "@/components/visualizations/GlobeLazy";
 import { LEARNING, profile } from "@/data/profile";
+import styles from "./AboutSection.module.css";
 
 const strengths = [
   {
-    title: "Automating the order lifecycle",
-    text: "Background workers and schedulers that carry an order from marketplace sync to a booked shipment without manual steps.",
+    title: "Order automation",
+    text: "Background workers and schedulers for order sync, procurement and courier booking.",
   },
   {
-    title: "Integrating the outside world",
-    text: "Amazon SP-API, Blue Dart, XpressBees and Razorpay at Growve; PlayFab, Strava, Google Fit and ML Kit before that.",
+    title: "API integrations",
+    text: "Marketplace, payment and courier APIs, with JWT, OAuth 2.0 and role-based access control.",
   },
   {
-    title: "Owning the data model",
-    text: "PostgreSQL schemas and complex SQL for orders, customers, inventory and shipments, plus an API gateway between systems.",
+    title: "Performance and deployment",
+    text: "Redis caching, background workers and Docker services, deployed through GitHub Actions.",
   },
   {
-    title: "Shipping on web and mobile",
-    text: "Next.js storefronts, admin panels and company websites, and React Native apps for enterprise clients.",
+    title: "Team responsibilities",
+    text: "Plan work for five developers, review code and work closely with product and operations.",
   },
-];
-
-const facts: [string, string][] = [
-  ["Based in", profile.location],
-  ["Now", `${profile.role}, Growve Retail and Management Services`],
-  ["Before", "ACE International, Fxgetactive"],
-  ["Focus", "Order automation, logistics, CRM and e-commerce"],
-  ["Learning now", LEARNING],
-  ["Education", "Full Stack Development, Newton School; B.Com, Mumbai University"],
-  ["Looking for", profile.seeking],
 ];
 
 export function AboutSection() {
   return (
-    <Section id="about">
-      <div className="grid gap-12 lg:grid-cols-12">
-        <div className="lg:col-span-7">
-          <h2 id="about-heading" className="h-section max-w-[16ch]">
-            I start from how the business moves.
-          </h2>
-          <div className="mt-8 max-w-[62ch] space-y-5 text-[1.0625rem] leading-relaxed">
-            <p>
-              I came to engineering through a commerce degree and the full-stack programme at Newton School. That shapes
-              how I work: before I design a schema or an API, I trace the real flow. An order arrives, stock is checked,
-              someone buys the product, a courier picks it up, a customer waits for it.
-            </p>
-            <p>
-              I&rsquo;ve shipped React Native apps for enterprise clients like AT&amp;T and SportzVillage, kept mobile
-              and web data in sync at ACE International, and now build the order, logistics and storefront systems at
-              Growve, including the workers and schedulers that process orders with no one in the loop.
-            </p>
-            <p className="text-muted">
-              Day to day I also plan and assign work, review code and help other developers, working closely with
-              product and operations.
-            </p>
-          </div>
-        </div>
-
-        <aside className="lg:col-span-5" aria-label="Quick facts">
-          <Card as="dl" className="divide-y divide-line">
-            {facts.map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[7.5rem_1fr] gap-4 px-5 py-4">
-                <dt className="text-sm text-muted">{k}</dt>
-                <dd className="leading-snug font-medium">{v}</dd>
-              </div>
-            ))}
-          </Card>
-        </aside>
+    <Section id="about" className={styles.section}>
+      <div className={styles.intro}>
+        <h2 id="about-heading" className="h-section">
+          About me
+        </h2>
+        <p className={styles.statement}>
+          {profile.role} at Growve,
+          <br />
+          <span>based in Mumbai.</span>
+        </p>
       </div>
-
-      <ul className="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {strengths.map((s) => (
-          <li key={s.title} className="border-t-2 border-ink/80 pt-4">
-            <h3 className="heading text-[1.15rem] leading-snug">{s.title}</h3>
-            <p className="mt-2 text-[0.98rem] text-muted">{s.text}</p>
-          </li>
+      <div className={styles.biography}>
+        <figure className={styles.portrait}>
+          <div className={styles.image}>
+            <Image
+              src={profile.photo.src}
+              alt={profile.photo.alt}
+              fill
+              sizes="(min-width: 1024px) 21rem, (min-width: 640px) 18rem, 85vw"
+              className="object-cover"
+            />
+          </div>
+          <figcaption>
+            <span>{profile.name}</span>
+            <span>
+              Mumbai, India <ArrowUpRight size={12} aria-hidden />
+            </span>
+          </figcaption>
+        </figure>
+        <div className={styles.story}>
+          <p className={styles.lead}>
+            I work on CRM, logistics and e-commerce applications at Growve Retail and Management Services.
+          </p>
+          <p>
+            My work includes Amazon order sync, purchase order automation, courier booking, shipment tracking, warehouse
+            inventory and payment integrations.
+          </p>
+          <p>
+            I also work on Redis caching, Docker deployments and GitHub Actions CI/CD. I plan tasks for five developers,
+            review code and coordinate with product and operations.
+          </p>
+          <p>
+            Previously, I worked on Linky Pro at ACE International and React Native fitness apps for AT&amp;T and
+            SportzVillage at Fxgetactive.
+          </p>
+          <div className={styles.details}>
+            <div>
+              <span>Currently</span>
+              <p>
+                {profile.role}
+                <br />
+                Growve Retail and Management Services
+              </p>
+            </div>
+            <div>
+              <span>Exploring</span>
+              <p>{LEARNING}</p>
+            </div>
+            <div>
+              <span>Education</span>
+              <p>
+                Full Stack Development, Newton School
+                <br />
+                B.Com, Mumbai University
+              </p>
+            </div>
+          </div>
+          <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className={styles.link}>
+            View LinkedIn profile <ArrowUpRight size={17} aria-hidden />
+          </a>
+        </div>
+      </div>
+      <div className={styles.principles}>
+        {strengths.map((item) => (
+          <div key={item.title}>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </div>
         ))}
-      </ul>
-
-      <figure className="mt-20 grid items-center gap-8 border-t border-line pt-12 md:grid-cols-12">
-        <div className="mx-auto w-full max-w-[28rem] md:col-span-6 md:max-w-none lg:col-span-5">
+      </div>
+      <figure className={styles.reach}>
+        <div className={styles.globe}>
           <GlobeLazy />
         </div>
-        <figcaption className="md:col-span-6 lg:col-span-6 lg:col-start-7">
-          <p className="h-section max-w-[14ch]">Where the orders go.</p>
-          <p className="lede mt-5">
-            The systems I build at Growve serve warehouses in the United States and the UAE and ship across India, all
-            run from Mumbai. Lanes are illustrative. Drag the globe to rotate it.
+        <figcaption>
+          <h3 className="h-section">Warehouse locations</h3>
+          <p>
+            The systems I work on manage stock in US and UAE warehouses and support shipments across India. Drag the
+            globe to rotate it.
           </p>
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[0.98rem] text-muted">
-            <li className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-accent" aria-hidden /> Mumbai, home base
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-amber" aria-hidden /> Warehouse regions
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-teal" aria-hidden /> Domestic lanes
-            </li>
-          </ul>
+          <span className={styles.mapNote}>Illustrative routes · US and UAE warehouses</span>
         </figcaption>
       </figure>
     </Section>

@@ -13,7 +13,7 @@ export const CAREER_START = { year: 2022, month: 10 };
 export const LEARNING = "Gen AI and system design, with my focus mostly on team management";
 
 /** Shown in the footer; update it when the content changes. */
-export const LAST_UPDATED = "Oct 2026";
+export const LAST_UPDATED = "Nov 2026";
 
 export const profile: Profile = {
   name: "Utkarsh Kamble",

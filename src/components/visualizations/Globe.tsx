@@ -78,7 +78,7 @@ export default function Globe({ className = "" }: { className?: string }) {
   const inView = useInView(wrapRef, "100px");
   const reduced = useReducedMotion() ?? false;
   const kickRef = useRef<() => void>(() => {});
-  const state = useRef({ lon0: 62, lat0: 14, vel: 0, dragging: false, lastX: 0, lastY: 0, start: 0 });
+  const state = useRef({ lon0: 62, lat0: 14, vel: 0, dragging: false, lastX: 0, lastY: 0 });
   const visibleRef = useRef(inView);
   useEffect(() => {
     visibleRef.current = inView;
@@ -101,6 +101,7 @@ export default function Globe({ className = "" }: { className?: string }) {
       amber: readColor("amber"),
       ink: readColor("ink"),
       muted: readColor("muted"),
+      font: getComputedStyle(document.body).fontFamily,
     });
     let colors = readColors();
     const refreshColors = () => {
@@ -134,7 +135,8 @@ export default function Globe({ className = "" }: { className?: string }) {
     mq.addEventListener("change", refreshColors);
 
     const s = state.current;
-    s.start = performance.now();
+    s.vel = 0;
+    s.dragging = false;
 
     const project = (lat: number, lon: number, r: number) => {
       const phi = lat * DEG;
@@ -149,11 +151,12 @@ export default function Globe({ className = "" }: { className?: string }) {
 
     let raf = 0;
     let last = performance.now();
+    let elapsed = reduced ? 99 : 0;
 
     const draw = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      const elapsed = reduced ? 99 : (now - s.start) / 1000;
+      if (!reduced && visibleRef.current && !document.hidden) elapsed += dt;
 
       if (!s.dragging) {
         if (Math.abs(s.vel) > 0.01) {
@@ -241,7 +244,7 @@ export default function Globe({ className = "" }: { className?: string }) {
       ctx.globalAlpha = 1;
 
       // Hubs and labels
-      ctx.font = `600 ${Math.max(11, R / 26)}px ${getComputedStyle(document.body).fontFamily}`;
+      ctx.font = `600 ${Math.max(11, R / 26)}px ${colors.font}`;
       for (const hub of hubs) {
         const p = project(hub.lat, hub.lon, 1);
         if (p.z <= 0.05) continue;
@@ -274,12 +277,12 @@ export default function Globe({ className = "" }: { className?: string }) {
 
       // Keep drawing only while something moves: the intro, a drag, or its glide.
       const moving = s.dragging || Math.abs(s.vel) > 0.01 || elapsed < 4;
-      if ((visibleRef.current || s.dragging) && moving) raf = requestAnimationFrame(draw);
+      if (!document.hidden && (visibleRef.current || s.dragging) && moving) raf = requestAnimationFrame(draw);
       else raf = 0;
     };
 
     const kick = () => {
-      if (!raf) {
+      if (!raf && !document.hidden) {
         last = performance.now();
         raf = requestAnimationFrame(draw);
       }
@@ -288,7 +291,10 @@ export default function Globe({ className = "" }: { className?: string }) {
     kickRef.current = kick;
 
     // Pointer drag
+    let activePointer: number | null = null;
     const onDown = (e: PointerEvent) => {
+      if (s.dragging || !e.isPrimary || e.button !== 0) return;
+      activePointer = e.pointerId;
       s.dragging = true;
       s.lastX = e.clientX;
       s.lastY = e.clientY;
@@ -297,7 +303,7 @@ export default function Globe({ className = "" }: { className?: string }) {
       kick();
     };
     const onMove = (e: PointerEvent) => {
-      if (!s.dragging) return;
+      if (!s.dragging || e.pointerId !== activePointer) return;
       const dx = e.clientX - s.lastX;
       const dy = e.clientY - s.lastY;
       s.lastX = e.clientX;
@@ -305,16 +311,30 @@ export default function Globe({ className = "" }: { className?: string }) {
       const k = 180 / Math.max(200, Math.min(w, h));
       s.lon0 -= dx * k;
       s.lat0 = Math.max(-40, Math.min(50, s.lat0 + dy * k));
-      s.vel = dx * k * 0.6;
+      s.vel = reduced ? 0 : dx * k * 0.6;
     };
-    const onUp = () => {
+    const onUp = (e: PointerEvent) => {
+      if (e.pointerId !== activePointer) return;
+      activePointer = null;
       s.dragging = false;
       kick();
+    };
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        s.dragging = false;
+        s.vel = 0;
+        activePointer = null;
+      } else {
+        kick();
+      }
     };
     canvas.addEventListener("pointerdown", onDown);
     canvas.addEventListener("pointermove", onMove);
     canvas.addEventListener("pointerup", onUp);
     canvas.addEventListener("pointercancel", onUp);
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -325,6 +345,8 @@ export default function Globe({ className = "" }: { className?: string }) {
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerup", onUp);
       canvas.removeEventListener("pointercancel", onUp);
+      document.removeEventListener("visibilitychange", onVisibility);
+      kickRef.current = () => {};
     };
   }, [reduced]);
 
@@ -342,6 +364,7 @@ export default function Globe({ className = "" }: { className?: string }) {
     else if (e.key === "ArrowDown") s.lat0 = Math.max(-40, s.lat0 - 6);
     else return;
     e.preventDefault();
+    s.vel = 0;
     kickRef.current();
   };
 

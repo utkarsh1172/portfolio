@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Manrope, Sora, Space_Grotesk } from "next/font/google";
+import { Inter, Manrope, Space_Grotesk } from "next/font/google";
 import type { ReactNode } from "react";
 import { Effects } from "@/components/layout/Effects";
 import { experience } from "@/data/experience";
@@ -20,8 +20,6 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
-// Section headings sit below the fold, so Sora isn't preloaded.
-const sora = Sora({ subsets: ["latin"], variable: "--font-sora", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -67,7 +65,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#07070c",
+  themeColor: "#10120f",
 };
 
 const current = experience.find((r) => r.current);
@@ -137,6 +135,9 @@ const structuredData = {
         "Next.js",
         "Node.js",
         "PostgreSQL",
+        "Redis caching",
+        "Docker",
+        "GitHub Actions CI/CD",
         "React Native",
       ],
       sameAs: [profile.links.github, profile.links.linkedin].filter(Boolean),
@@ -148,7 +149,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en-IN"
-      className={`${inter.variable} ${manrope.variable} ${spaceGrotesk.variable} ${sora.variable}`}
+      className={`${inter.variable} ${manrope.variable} ${spaceGrotesk.variable}`}
       data-theme="dark"
       suppressHydrationWarning
     >
@@ -162,7 +163,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <a
-          href="#about"
+          href="#work"
           className="sr-only z-[80] rounded-lg bg-accent px-4 py-2 text-accent-ink focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
         >
           Skip to content

@@ -10,11 +10,13 @@ export function ContactSection() {
   const delivery = getEmailConfig() !== null;
 
   return (
-    <Section id="contact" className="pb-16">
+    <Section id="contact" className="contact-section border-t border-line pb-16">
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <h2 id="contact-heading" className="heading text-[clamp(2.25rem,5vw,3.75rem)]">
-            Let&rsquo;s talk about the role.
+          <h2 id="contact-heading" className="heading max-w-[12ch] text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[1.03]">
+            Get in
+            <br />
+            <span className="text-accent">touch.</span>
           </h2>
           <p className="lede mt-6">{profile.seeking}</p>
 

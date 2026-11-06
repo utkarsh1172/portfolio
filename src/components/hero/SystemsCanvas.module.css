@@ -1,0 +1,370 @@
+.root {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  min-width: 0;
+  margin: 0;
+  color: rgb(var(--ink));
+}
+
+.utility {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-inline: 12px;
+  color: rgb(var(--muted));
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.utility > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legendDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(var(--accent));
+}
+
+.replay {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 3px 6px;
+  color: rgb(var(--ink));
+  transition: color 160ms ease;
+}
+
+.replay:hover {
+  color: rgb(var(--accent));
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 600 / 430;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.canvas {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.stage[data-rendered="true"] .fallback {
+  visibility: hidden;
+}
+
+.staticRails {
+  stroke: rgb(var(--ink) / 0.2);
+  stroke-width: 0.9;
+}
+
+.staticCore path {
+  fill: rgb(var(--bg));
+  stroke: rgb(var(--ink) / 0.3);
+}
+
+.staticCore path:last-child {
+  stroke: rgb(var(--accent) / 0.9);
+  stroke-width: 1.4;
+}
+
+.core {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  color: rgb(var(--accent));
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: clamp(17px, 2.3vw, 28px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  pointer-events: none;
+}
+
+.core > span {
+  margin-top: 4px;
+  color: rgb(var(--muted));
+  font-family: var(--font-inter), sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.node {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 62px;
+  padding: 11px 14px 11px 11px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+  background: rgb(var(--bg));
+  text-align: left;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.node[aria-pressed="true"] {
+  border-color: rgb(var(--accent) / 0.75);
+  background: color-mix(in srgb, rgb(var(--accent)) 9%, rgb(var(--bg)));
+}
+
+.nodeIcon {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 7px;
+  background: rgb(var(--ink) / 0.04);
+  color: rgb(var(--muted));
+  transition:
+    color 180ms ease,
+    background-color 180ms ease;
+}
+
+.node[aria-pressed="true"] .nodeIcon {
+  background: rgb(var(--accent));
+  color: rgb(var(--bg));
+}
+
+.nodeText {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+.nodeText > strong {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.nodeText > span {
+  margin-top: 4px;
+  color: rgb(var(--muted));
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+.nodePoint {
+  position: absolute;
+  bottom: -3px;
+  left: calc(50% - 2.5px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(var(--muted));
+}
+
+.node[aria-pressed="true"] .nodePoint {
+  background: rgb(var(--accent));
+}
+
+.node[data-signal="true"] {
+  border-color: rgb(var(--accent) / 0.7);
+}
+
+.node[data-signal="true"] .nodePoint {
+  background: rgb(var(--accent));
+}
+
+.node[data-signal="true"] .nodePoint::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid rgb(var(--accent));
+  border-radius: 50%;
+  animation: signal-arrive 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes signal-arrive {
+  from {
+    transform: scale(0.6);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.dragHint {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgb(var(--muted));
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 135px;
+  margin: 8px 12px 0;
+  padding-top: 20px;
+  border-top: 1px solid rgb(var(--line));
+}
+
+.description {
+  min-width: 0;
+}
+
+.description h3 {
+  margin: 0;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: clamp(17px, 1.8vw, 22px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.description p {
+  max-width: 43ch;
+  margin-top: 8px;
+  color: rgb(var(--muted));
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.fact {
+  display: block;
+  margin-top: 9px;
+  color: rgb(var(--accent));
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.open {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  place-items: center;
+  border: 1px solid rgb(var(--line));
+  border-radius: 50%;
+  color: rgb(var(--ink));
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.open:hover {
+  border-color: rgb(var(--accent));
+  background: rgb(var(--accent));
+  color: rgb(var(--bg));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .node:hover {
+    border-color: rgb(var(--ink) / 0.55);
+  }
+}
+
+@media (max-width: 600px) {
+  .utility {
+    padding-inline: 20px;
+    font-size: 10px;
+  }
+
+  .node {
+    gap: 6px;
+    min-height: 48px;
+    padding: 7px 9px 7px 7px;
+    border-radius: 10px;
+  }
+
+  .nodeIcon {
+    width: 23px;
+    height: 25px;
+  }
+
+  .nodeIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .nodeText > strong {
+    font-size: 10px;
+  }
+
+  .nodeText > span {
+    max-width: 88px;
+    font-size: 8px;
+  }
+
+  .caption {
+    min-height: 145px;
+    margin-inline: 20px;
+    padding-top: 18px;
+  }
+
+  .description p {
+    font-size: 12px;
+  }
+
+  .dragHint {
+    bottom: -2px;
+    font-size: 9px;
+  }
+
+  .open {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    transform: none !important;
+    transition: none;
+  }
+
+  .dragHint {
+    display: none;
+  }
+  .nodePoint::after {
+    display: none;
+  }
+}

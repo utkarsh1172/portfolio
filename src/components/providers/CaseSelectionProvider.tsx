@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { MotionConfig } from "motion/react";
 import type { CaseStudyId } from "@/types";
 import { scrollToSection } from "@/lib/scroll";
 
@@ -20,7 +21,11 @@ export function CaseSelectionProvider({ children }: { children: ReactNode }) {
     if (scroll) requestAnimationFrame(() => scrollToSection("work"));
   }, []);
   const value = useMemo(() => ({ caseId, openCase }), [caseId, openCase]);
-  return <CaseSelectionContext.Provider value={value}>{children}</CaseSelectionContext.Provider>;
+  return (
+    <MotionConfig reducedMotion="user" transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}>
+      <CaseSelectionContext.Provider value={value}>{children}</CaseSelectionContext.Provider>
+    </MotionConfig>
+  );
 }
 
 export function useCaseSelection(): CaseSelection {

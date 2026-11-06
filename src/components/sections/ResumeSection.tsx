@@ -21,7 +21,9 @@ export async function ResumeSection() {
         <Card className="relative overflow-hidden lg:col-span-7">
           <div className="p-6 sm:p-8">
             <p className="heading text-[1.75rem]">{profile.name}</p>
-            <p className="text-muted">Full-stack developer: Next.js, Node.js, React Native, PostgreSQL</p>
+            <p className="text-muted">
+              Full-stack developer: Next.js, Node.js, React Native, PostgreSQL, Redis, Docker
+            </p>
             <div className="mt-6 space-y-4">
               {experience.map((r) => (
                 <div key={r.id} className="grid grid-cols-[1fr_auto] gap-x-4 border-t border-line pt-3">

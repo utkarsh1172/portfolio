@@ -1,0 +1,218 @@
+.section {
+  border-top: 1px solid rgb(var(--line));
+}
+.intro {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: start;
+  gap: 4rem;
+  margin-bottom: 5rem;
+}
+.statement {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: rgb(var(--muted));
+}
+.statement > span {
+  color: rgb(var(--ink));
+}
+.biography {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: clamp(3rem, 8vw, 8rem);
+}
+.portrait {
+  width: 100%;
+  max-width: 22rem;
+  align-self: start;
+}
+.image {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.image img {
+  object-position: 50% 35%;
+  filter: saturate(0.65);
+  transition:
+    filter 300ms ease,
+    transform 600ms var(--ease-out);
+}
+.portrait figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  color: rgb(var(--muted));
+}
+.portrait figcaption > span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.portrait figcaption > span:first-child {
+  color: rgb(var(--ink));
+}
+.story {
+  max-width: 65ch;
+}
+.story > p {
+  color: rgb(var(--muted));
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-top: 1.5rem;
+}
+.story > .lead {
+  margin-top: 0;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: clamp(1.4rem, 2.3vw, 1.85rem);
+  line-height: 1.45;
+  color: rgb(var(--ink));
+  letter-spacing: -0.02em;
+}
+.details {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(var(--line));
+}
+.details > div {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 1rem;
+}
+.details span {
+  color: rgb(var(--muted));
+  font-size: 0.75rem;
+}
+.details p {
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: rgb(var(--accent));
+  min-height: 2.75rem;
+}
+.principles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 5rem;
+}
+.principles > div {
+  border-top: 1px solid rgb(var(--line));
+  padding-top: 1.25rem;
+}
+.principles h3 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.principles p {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: rgb(var(--muted));
+}
+.reach {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 5rem;
+  margin-top: 5rem;
+}
+.globe {
+  width: 100%;
+  max-width: 26rem;
+}
+.reach h3 {
+  font-size: clamp(2rem, 3.2vw, 3rem);
+}
+.reach h3 > span {
+  color: rgb(var(--muted));
+}
+.reach p {
+  max-width: 40ch;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: rgb(var(--muted));
+}
+.mapNote {
+  display: block;
+  margin-top: 1.5rem;
+  font-size: 0.7rem;
+  color: rgb(var(--muted));
+}
+@media (hover: hover) and (pointer: fine) {
+  .portrait:hover img {
+    filter: saturate(1);
+    transform: scale(1.025);
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+}
+@media (max-width: 899px) {
+  .intro {
+    gap: 2rem;
+  }
+  .biography {
+    gap: 2.5rem;
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+  .principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .reach {
+    gap: 2rem;
+  }
+}
+@media (max-width: 639px) {
+  .intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .biography {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+  .portrait {
+    max-width: 18rem;
+  }
+  .story > p {
+    font-size: 0.94rem;
+  }
+  .details > div {
+    grid-template-columns: 5rem 1fr;
+  }
+  .principles {
+    gap: 2rem 1.5rem;
+    margin-top: 3rem;
+  }
+  .reach {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .globe {
+    width: 85%;
+    margin-inline: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portrait:hover img {
+    transform: none;
+  }
+}

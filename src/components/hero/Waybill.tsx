@@ -14,18 +14,14 @@ export function Waybill({ years, className }: { years: number; className?: strin
   const rows: Row[] = [
     { label: "From", value: "Mumbai, India" },
     { label: "In service since", value: `Oct 2022, ${years} yrs` },
-    { label: "Current hub", value: "Growve, Senior Software Developer", wide: true },
+    { label: "Current hub", value: "Growve · Senior Software Developer", wide: true },
     { label: "Handled", value: "400+ orders a day, 5K+ shipments a month", wide: true },
-    { label: "Connected", value: "Amazon SP-API, Blue Dart, XpressBees, Razorpay", wide: true },
   ];
 
   return (
     <aside
       aria-label="Profile at a glance"
-      className={cn(
-        "rotate-(--tilt) rounded-card border border-paper-line bg-paper font-semi text-paper-ink shadow-card",
-        className,
-      )}
+      className={cn("rounded-card bg-paper font-semi text-paper-ink shadow-card", className)}
     >
       <div className="flex items-center justify-between gap-4 border-b-2 border-paper-ink px-4 py-2.5">
         <span className="flex items-center gap-2.5">
@@ -41,21 +37,21 @@ export function Waybill({ years, className }: { years: number; className?: strin
         {rows.map((r) => (
           <div
             key={r.label}
-            className={cn("border-b border-paper-line px-4 py-2", r.wide ? "col-span-2" : "odd:border-r")}
+            className={cn("border-b border-paper-line px-4 py-1.5", r.wide ? "col-span-2" : "odd:border-r")}
           >
             <dt className="text-[0.74rem] leading-tight font-medium text-paper-muted">{r.label}</dt>
-            <dd className="text-[0.95rem] leading-snug font-semibold">{r.value}</dd>
+            <dd className="text-[0.85rem] leading-snug font-semibold">{r.value}</dd>
           </div>
         ))}
       </dl>
 
       <div className="flex items-center gap-2 px-4 pt-2.5 pb-1">
         <span className="h-2.5 w-2.5 rounded-full bg-accent" aria-hidden />
-        <p className="text-[0.88rem] font-semibold">Open to senior full-stack roles</p>
+        <p className="text-[0.8rem] font-semibold">Open to senior full-stack roles</p>
       </div>
 
       <div className="px-4 pt-1 pb-3">
-        <Barcode value="utkarsh1172" className="h-9 w-full" />
+        <Barcode value="utkarsh1172" className="h-7 w-full" />
         <p className="mt-1 text-center text-[0.72rem] tracking-[0.3em] text-paper-muted">utkarsh1172</p>
       </div>
     </aside>

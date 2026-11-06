@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/cn";
 
 const fieldClass =
-  "mt-1.5 w-full rounded-card border border-line bg-bg-2 px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none aria-[invalid=true]:border-accent";
+  "mt-1.5 w-full rounded-card border border-line bg-bg-2 px-4 py-3 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none aria-[invalid=true]:border-accent";
 
 const empty: ContactInput = { name: "", email: "", company: "", message: "" };
 
@@ -145,7 +145,7 @@ export function ContactForm({ delivery }: { delivery: boolean }) {
             className={cn(fieldClass, "min-h-[8rem] resize-y")}
             value={values.message}
             onChange={update("message")}
-            placeholder="The role, the team and what you’re shipping"
+            placeholder="Tell me about the role or project"
             required
             aria-invalid={!!errors.message}
             aria-describedby={describedBy("message")}

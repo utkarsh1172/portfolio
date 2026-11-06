@@ -33,13 +33,13 @@ npm run dev          # http://localhost:3000
 
 Copy `.env.example` to `.env.local`. All variables are validated with Zod.
 
-| Variable               | Required           | Purpose                                                                           |
-| ---------------------- | ------------------ | --------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL` | Yes, in production | Canonical URL, sitemap, robots.txt, Open Graph tags. A bad value fails the build. |
-| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | No | Google Search Console HTML-tag verification token. |
-| `RESEND_API_KEY`       | No                 | Enables email delivery for the contact form through [Resend](https://resend.com). |
-| `CONTACT_FROM_EMAIL`   | With Resend        | Sender, on a domain verified in Resend, e.g. `Portfolio <hi@your-domain.com>`.    |
-| `CONTACT_TO_EMAIL`     | No                 | Where messages go. Defaults to the email in `src/data/profile.ts`.                |
+| Variable                               | Required           | Purpose                                                                           |
+| -------------------------------------- | ------------------ | --------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                 | Yes, in production | Canonical URL, sitemap, robots.txt, Open Graph tags. A bad value fails the build. |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | No                 | Google Search Console HTML-tag verification token.                                |
+| `RESEND_API_KEY`                       | No                 | Enables email delivery for the contact form through [Resend](https://resend.com). |
+| `CONTACT_FROM_EMAIL`                   | With Resend        | Sender, on a domain verified in Resend, e.g. `Portfolio <hi@your-domain.com>`.    |
+| `CONTACT_TO_EMAIL`                     | No                 | Where messages go. Defaults to the email in `src/data/profile.ts`.                |
 
 **Contact form behaviour.** Without `RESEND_API_KEY` and `CONTACT_FROM_EMAIL`, the form opens the visitor's
 email app with the message pre-filled. With both set, it sends through a server action: validated on the
@@ -113,7 +113,7 @@ with injectable randomness and time, so it is unit-tested deterministically. The
 
 - **Links:** fill `links.github` / `links.linkedin` in `src/data/profile.ts`; the buttons appear automatically.
 - **Metrics:** update a project's `outcome` in `src/data/projects.ts`.
-- **Resume:** replace `public/resume/Utkarsh_Kamble_Resume.docx` (keep the file name, or update `profile.resume`).
+- **Resume:** replace `public/resume/Utkarsh_Kamble_Resume.pdf` (keep the file name, or update `profile.resume`).
 - **Experience start date:** `CAREER_START` in `src/data/profile.ts`.
 - **"Learning now" and "Last updated":** `LEARNING` and `LAST_UPDATED` in `src/data/profile.ts`.
 
@@ -121,16 +121,17 @@ with injectable randomness and time, so it is unit-tested deterministically. The
 
 - The hero headline (the LCP element) renders from server HTML with a CSS-only entrance animation, so it
   never waits for JavaScript.
-- The globe (canvas, ~6 KB of code) and the order desk load after the critical path via `next/dynamic`, with
+- The globe and the order desk load after the critical path via `next/dynamic`, with
   same-size placeholders so nothing shifts.
-- Fonts (Inter, Space Grotesk, Sora, Manrope) come from Google Fonts through `next/font/google`, which downloads
+- Fonts (Inter, Space Grotesk, Manrope) come from Google Fonts through `next/font/google`, which downloads
   them at build time and serves them from this site: no third-party requests, no layout shift on swap.
 - The contact schema uses `zod/mini` so validation adds only a few KB to the browser bundle.
-- Nothing animates on its own: the globe moves only when dragged and the order desk runs only when started.
-- Glass (`backdrop-filter`) is limited to the header on phones, where it is most expensive.
+- The introduction plays once and has a replay control. Both canvas scenes pause when hidden; the order desk runs only when started;
+  both pause work offscreen and in hidden tabs.
+- Glass (`backdrop-filter`) is limited to the fixed header.
 
 Measured locally against the previous Next.js 14 build (production servers, headless Chromium; mobile with
-4× CPU throttling). These are lab numbers, not field data:
+4× CPU throttling). These historical lab measurements predate the November visual update and are not field data:
 
 | Metric            | Before (Next 14) | After (Next 16) |
 | ----------------- | ---------------- | --------------- |
@@ -159,14 +160,18 @@ checks at 320, 390, 820, 1024, 1440 and 2560 px. Those browser checks are not pa
 
 ## Design decisions
 
-- **No GSAP or Three.js.** The design's motion is component transitions (Motion) and one canvas globe; neither
-  needs a timeline library or WebGL. Adding them would cost bundle size without visible benefit.
-- **Restrained motion.** A 300 ms fade-up for the hero and for each section as it scrolls into view, and
-  200–300 ms hover transitions. Sections are only hidden once JavaScript is running, so content never depends
-  on it, and `prefers-reduced-motion` turns all of it off.
-- **Glass, understated.** The header and cards use a faint translucent fill, a hairline edge and a highlight
-  along the top edge, with solid fallbacks for browsers without `backdrop-filter` and for
-  `prefers-reduced-transparency`. One accent, one radius (`rounded-card`), one shadow (`shadow-card`).
+- **No GSAP or Three.js.** The signature geometry uses Canvas2D and SVG, with Motion for interruptible state transitions.
+  These artifacts do not need a separate timeline library or WebGL runtime.
+- **One authored entrance.** Kinetic typography introduces an interactive orbital system sculpture. Its planes deploy,
+  the core assembles and signals trace the marketplace-to-courier route within 3.6 seconds. Replay is explicit;
+  reading sections stay still. Project exhibits crossfade together in 240ms. Reduced motion retains static geometry and feedback.
+- **Solid surfaces.** Hairline borders organize panels; translucent blur is reserved for the fixed header.
+  The About story uses an intact portrait and open rules. Project drawings visualize real architecture and are labeled system overviews.
+- **Design context.** [PRODUCT.md](PRODUCT.md) records the product evidence; [DESIGN.md](DESIGN.md) records
+  the visual system, motion timeline, accessibility behavior and installed skill references.
+- **Strict source checks.** The build first checks authored TypeScript with both unused-declaration checks.
+  Next uses `tsconfig.framework.json` to retain generated export validation while tolerating its own unused
+  metadata-route imports in version 16.4.3.
 - **Tooling versions.** ESLint 9 rather than 10 and TypeScript 6 rather than 7, because Next.js's ESLint
   plugins and typescript-eslint do not support the newer majors yet. Node's built-in test runner instead of
   Vitest keeps the dependency tree small.
